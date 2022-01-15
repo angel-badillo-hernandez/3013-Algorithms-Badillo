@@ -1,7 +1,7 @@
 /*****************************************************************************
 *
-*  Author:           Angel Badillo Hernandez @It-Is-Legend27
-*  Email:            badilloa022402@gmail.com
+*  Author:           Angel Badillo Hernandez  / @It-Is-Legend27
+*  Email:            badilloa022402@gmail.com / abadillo0224@my.msutexas.edu
 *  Label:            A03
 *  Title:            Commenting Code
 *  Course:           CMPS-3013-201
@@ -49,11 +49,11 @@ struct Node
 
     /**
      * Public : Node
-     * 
+     *
      * @brief Construct a new Node object with default values.
-     * 
+     *
      * @param None
-     * 
+     *
      * @return Nothing.
      */
     Node()
@@ -64,11 +64,11 @@ struct Node
 
     /**
      * Public : Node
-     * 
+     *
      * @brief Construct a new Node object with a given value.
-     * 
+     *
      * @param n An integer.
-     * 
+     *
      * @return Nothing.
      */
     Node(int n)
@@ -119,16 +119,15 @@ private:
     int Size;   // Number of Nodes in the list
 
 public:
-
     /**
      * Public : List
-     * 
+     *
      * @brief Construct a new empty List object.
-     * 
+     *
      * @param None
-     * 
+     *
      * @return Nothing.
-     * 
+     *
      */
     List()
     {
@@ -138,11 +137,11 @@ public:
 
     /**
      * Public : Push
-     * 
+     *
      * @brief Appends an integer to the list.
-     * 
+     *
      * @param val An integer to be stored.
-     * 
+     *
      * @return Nothing.
      */
     void Push(int val)
@@ -164,11 +163,11 @@ public:
 
     /**
      * Public : Insert
-     * 
+     *
      * @brief Prepends an integer to the list.
-     * 
+     *
      * @param val An integer to be stored.
-     * 
+     *
      * @return Nothing.
      */
     void Insert(int val)
@@ -189,11 +188,11 @@ public:
 
     /**
      * Public : PrintTail
-     * 
+     *
      * @brief Prints the last integer in the list to standard output.
-     * 
+     *
      * @param None
-     * 
+     *
      * @return Nothing.
      */
     void PrintTail()
@@ -203,11 +202,11 @@ public:
 
     /**
      * Public : Print
-     * 
+     *
      * @brief "Prints" the contents of the list to a string object.
-     * 
+     *
      * @param None
-     * 
+     *
      * @return string containing contents of the list.
      */
     string Print()
@@ -226,25 +225,28 @@ public:
 
     /**
      * Public : Pop
-     * 
+     *
+     * @warning Method not implemented.
+     *
      * @brief Removes an item from the list, and returns it.
-     * 
+     *
      * @param None
-     * 
+     *
      * @return int value that was removed from list.
      */
     int Pop()
     {
         Size--;
-        return 0; //
+        return 0;
     }
 
     /**
      * Public : operator+
+     *
      * @brief Allows two lists to be appended to a new list.
-     * 
+     *
      * @param Rhs A const List object by reference.
-     * 
+     *
      * @return List containing the contents of two lists added together.
      */
     List operator+(const List &Rhs)
@@ -277,10 +279,13 @@ public:
     }
 
     /**
-     * @brief 
-     * 
-     * @param index 
-     * @return int 
+     * Public : operator[]
+     *
+     * @brief Returns the value of an item in the list at a given index.
+     *
+     * @param index An integer, the position of the item in the list.
+     *
+     * @return int containing the value of the item being seached for.
      */
     int operator[](int index)
     {
@@ -302,7 +307,18 @@ public:
         }
     }
 
-    friend ostream &operator<<(ostream &os, List L)
+    /**
+     * Public : operator<<
+     *
+     * @brief Prints the contents of the list to standard output.
+     *
+     * @param os An ostream object, by reference.
+     *
+     * @param L  A List object, by reference.
+     *
+     * @return ostream& containing the contents of the list.
+     */
+    friend ostream &operator<<(ostream &os, const List &L)
     {
         os << L.Print();
         return os;
@@ -311,27 +327,30 @@ public:
 
 int main(int argc, char **argv)
 {
-    List L1;
-    List L2;
+    List L1; // An empty list
+    List L2; // Another empty list
 
+    // Pushes integers 0-24 to the list L1
     for (int i = 0; i < 25; i++)
     {
         L1.Push(i);
     }
 
+    // Pushes integers 50-100 to list L2
     for (int i = 50; i < 100; i++)
     {
         L2.Push(i);
     }
 
     // cout << L1 << endl;
-    L1.PrintTail();
-    L2.PrintTail();
+    
+    L1.PrintTail();        // Prints tail of L1
+    L2.PrintTail();        // Prints tail of L2
 
-    List L3 = L1 + L2;
-    cout << L3 << endl;
+    List L3 = L1 + L2;     // Concatenates L1 and L2 to a new list L3
+    cout << L3 << endl;    // Prints the contents of L3
 
-    cout << L3[5] << endl;
+    cout << L3[5] << endl; // Prints the 6th item in L3
 
     return 0;
 }
