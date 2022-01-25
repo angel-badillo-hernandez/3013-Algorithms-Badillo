@@ -103,7 +103,7 @@ public:
   * 
   * Params:
   *     - int size
-  * 
+  *     - double gT
   * Returns:
   *     - NULL
   */
@@ -223,9 +223,7 @@ public:
   *      [bool] ; success = true
   */
     bool Push(int x) {
-        if (Full()) {
-            GrowContainer();
-        }
+       
         if (!Full()) {
             A[++top] = x;
 
@@ -250,7 +248,23 @@ public:
   *      NULL
   */
     void GrowContainer() {
-        int newSize = size * 2;    // double size of original
+        int newSize = size * growFactor;    // double size of original
+        int *B = new int[newSize]; // allocate new memory
+
+        for (int i = 0; i < top; i++) { // copy values to new array
+            B[i] = A[i];
+        }
+
+        delete[] A; // delete old array
+
+        size = newSize; // save new size
+
+        A = B; // reset array pointer
+    }
+
+    void ShrinkContainer()
+    {
+        int newSize = size * shrinkFactor;    // double size of original
         int *B = new int[newSize]; // allocate new memory
 
         for (int i = 0; i < top; i++) { // copy values to new array
@@ -264,6 +278,24 @@ public:
         A = B; // reset array pointer
     }
 };
+
+    void CheckResize()
+    {
+        double capacity = (top+1)/size; 
+
+        if(capacity >= growThres)
+        {
+            GrowContainer();
+        }
+        else if(capacity <= shrinkFactor)
+        {
+            ShrinkContainer();
+        }
+        else
+        {
+            return;
+        }
+    }
 
 // MAIN DRIVER
 // Simple Array Based Stack Usage:
