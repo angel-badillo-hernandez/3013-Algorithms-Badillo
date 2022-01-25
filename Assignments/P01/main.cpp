@@ -23,285 +23,243 @@ using namespace std;
 
 /**
  * ArrayStack
- *
+ * 
  * Description:
  *      Array based stack
- *
+ * 
  * Public Methods:
  *      - See class below
- *
- * Usage:
+ * 
+ * Usage: 
  *      - See main program
- *
+ *      
  */
-class ArrayStack
-{
+class ArrayStack {
 private:
-  int *A;                    // pointer to array of int's
-  int size{10};              // current max stack size
-  int top{-1};               // top of stack
-  float tooFullThres{1.0};   // Threshold for when to enlarge
-  float tooEmptyThres{0.15}; // Threshold for when to shrink
-  float enlargeThres{2.0};   // Enlarging ratio
-  float reduceThres{0.5};    // Shrinking ratio
+    int *A;              // pointer to array of int's
+    int size;            // current max stack size
+    int top;             // top of stack
+    double growThres;    // Capacity to reach before growing
+    double shrinkThres;  // Capacity to reach before shrinking
+    double growFactor;   // Growth factor
+    double shrinkFactor; // Shrink factor
+
+    // top = number of items in the stack + 1
+    // size = array size
+
+    // size = 100
+    // (top + 1) / size
 
 public:
-  /**
-   * ArrayStack
-   *
-   * Description:
-   *      Constructor no params
-   *
-   * Params:
-   *     - None
-   *
-   * Returns:
-   *     - NULL
-   */
-  ArrayStack(): size(10), top(-1), tooFullThres(1.0), tooEmptyThres(0.15), enlargeThres(2.0), reduceThres(0.5)
-  {
-    A = new int[size];
-    
-  }
-
-  /**
-   * ArrayStack
-   *
-   * Description:
-   *      Constructor size param
-   *
-   * Params:
-   *     - int size
-   *
-   * Returns:
-   *     - NULL
-   */
-  ArrayStack(int s, float fT, float eT, float grow, float shrink): size(s), tooFullThres(fT), tooEmptyThres(eT), enlargeThres(grow), reduceThres(shrink)
-  {
-    A = new int[s];
-  }
-
-  ArrayStack(int s, char** argv)
-  {
-    size = s;
-    A = new int[s];
-    top = -1;
-
-    tooFullThres = stod(argv[1]);
-    tooEmptyThres = stod(argv[2]);
-    enlargeThres = stod(argv[3]);
-    reduceThres = stod(argv[4]);
-  }
-
-  /**
-   * Public bool: Empty
-   *
-   * Description:
-   *      Stack empty?
-   *
-   * Params:
-   *      NULL
-   *
-   * Returns:
-   *      [bool] true = empty
-   */
-  bool Empty()
-  {
-    return (top <= -1);
-  }
-
-
-  void CheckResize()
-  {
-    if( float(top)/(size-1) >= tooFullThres)
-    {
-      ContainerGrow();
-    }
-    else if( float(top)/(size-1) <= tooEmptyThres)
-    {
-      ContainerShrink();
-    }
-    else
-    {
-      return;
-    }
-  }
-
-  /**
-   * Public bool: Full
-   *
-   * Description:
-   *      Stack full?
-   *
-   * Params:
-   *      NULL
-   *
-   * Returns:
-   *      [bool] true = full
-   */
-  bool Full()
-  {
-    return (top >= size - 1);
-  }
-
-  /**
-   * Public int: Peek
-   *
-   * Description:
-   *      Returns top value without altering the stack
-   *
-   * Params:
-   *      NULL
-   *
-   * Returns:
-   *      [int] top value if any
-   */
-  int Peek()
-  {
-    if (!Empty())
-    {
-      return A[top];
+/**
+  * ArrayStack
+  * 
+  * Description:
+  *      Constructor no params
+  * 
+  * Params:
+  *     - None
+  * 
+  * Returns:
+  *     - NULL
+  */
+    ArrayStack() {
+        size = 10;
+        A = new int[size];
+        top = -1;
+        growThres = 1.00;
+        shrinkThres = 0.15;
+        growFactor = 2.0;
+        shrinkFactor = 0.5;
     }
 
-    return -99; // some sentinel value
-                // not a good solution
-  }
-
-  /**
-   * Public int: Pop
-   *
-   * Description:
-   *      Returns top value and removes it from stack
-   *
-   * Params:
-   *      NULL
-   *
-   * Returns:
-   *      [int] top value if any
-   */
-  int Pop()
-  {
-    if (!Empty())
-    {
-      return A[top--];
+/**
+  * ArrayStack
+  * 
+  * Description:
+  *      Constructor size param
+  * 
+  * Params:
+  *     - int size
+  * 
+  * Returns:
+  *     - NULL
+  */
+    ArrayStack(int s, double gT, double sT, double gF, double sF) {
+        size = s;
+        A = new int[s];
+        top = -1;
+        growThres = gT;
+        shrinkThres = sT;
+        growFactor = gF;
+        shrinkFactor = sF;
     }
 
-    return -99; // some sentinel value
-                // not a good solution
-  }
-
-  /**
-   * Public void: Print
-   *
-   * Description:
-   *      Prints stack to standard out
-   *
-   * Params:
-   *      NULL
-   *
-   * Returns:
-   *      NULL
-   */
-  void Print()
-  {
-    for (int i = 0; i <= top; i++)
-    {
-      cout << A[i] << " ";
-    }
-    cout << endl;
-  }
-
-  /**
-   * Public bool: Push
-   *
-   * Description:
-   *      Adds an item to top of stack
-   *
-   * Params:
-   *      [int] : item to be added
-   *
-   * Returns:
-   *      [bool] ; success = true
-   */
-  bool Push(int x)
-  {
-    if (Full())
-    {
-      ContainerGrow();
-    }
-    if (!Full())
-    {
-      A[++top] = x;
-      return true;
+/**
+  * Public bool: Empty
+  * 
+  * Description:
+  *      Stack empty?
+  * 
+  * Params:
+  *      NULL
+  * 
+  * Returns:
+  *      [bool] true = empty
+  */
+    bool Empty() {
+        return (top <= -1);
     }
 
-    return false;
-  }
-
-  /**
-   * Public void: ContainerGrow
-   *
-   * Description:
-   *      Resizes the container for the stack by doubling
-   *      its capacity
-   *
-   * Params:
-   *      NULL
-   *
-   * Returns:
-   *      NULL
-   */
-  void ContainerGrow()
-  {
-    int newSize = size * 2;    // double size of original
-    int *B = new int[newSize]; // allocate new memory
-
-    for (int i = 0; i < size; i++)
-    { // copy values to new array
-      B[i] = A[i];
+/**
+  * Public bool: Full
+  * 
+  * Description:
+  *      Stack full?
+  * 
+  * Params:
+  *      NULL
+  * 
+  * Returns:
+  *      [bool] true = full
+  */
+    bool Full() {
+        return (top >= size - 1);
     }
 
-    delete[] A; // delete old array
+/**
+  * Public int: Peek
+  * 
+  * Description:
+  *      Returns top value without altering the stack
+  * 
+  * Params:
+  *      NULL
+  * 
+  * Returns:
+  *      [int] top value if any
+  */
+    int Peek() {
+        if (!Empty()) {
+            return A[top];
+        }
 
-    size = newSize; // save new size
+        return -99; // some sentinel value
+                    // not a good solution
+    }
 
-    A = B; // reset array pointer
-  }
+/**
+  * Public int: Pop
+  * 
+  * Description:
+  *      Returns top value and removes it from stack
+  * 
+  * Params:
+  *      NULL
+  * 
+  * Returns:
+  *      [int] top value if any
+  */
+    int Pop() {
+        if (!Empty()) {
+            return A[top--];
+        }
 
-  /**
-   * Public void: ContainerShrink
-   *
-   * Description:
-   *      Resizes the container for the stack by halving
-   *      its capacity
-   *
-   * Params:
-   *      NULL
-   *
-   * Returns:
-   *      NULL
-   */
-  void ContainerShrink()
-  {
-    int newSize = size / 2;    // Halve the size of the original container
-    int *B = new int[newSize]; // Allocate new memory
+        return -99; // some sentinel value
+                    // not a good solution
+    }
 
-    for (int i = 0; i < newSize; i++)
-    // Copy values to new array
-      B[i] = A[i];
+    /**
+  * Public void: Print
+  * 
+  * Description:
+  *      Prints stack to standard out
+  * 
+  * Params:
+  *      NULL
+  * 
+  * Returns:
+  *      NULL
+  */
+    void Print() {
+        for (int i = 0; i <= top; i++) {
+            cout << A[i] << " ";
+        }
+        cout << endl;
+    }
 
-    delete[] A;     // Delete old array
+/**
+  * Public bool: Push
+  * 
+  * Description:
+  *      Adds an item to top of stack
+  * 
+  * Params:
+  *      [int] : item to be added
+  * 
+  * Returns:
+  *      [bool] ; success = true
+  */
+    bool Push(int x) {
+        if (Full()) {
+            GrowContainer();
+        }
+        if (!Full()) {
+            A[++top] = x;
 
-    size = newSize; // Save new size
+            //checkGrowContainer();
+            return true;
+        }
 
-    A = B;          // Reset array pointer
-  }
+        return false;
+    }
+
+/**
+  * Public void: GrowContainer
+  * 
+  * Description:
+  *      GrowContainers the container for the stack by doubling
+  *      its capacity
+  * 
+  * Params:
+  *      NULL
+  * 
+  * Returns:
+  *      NULL
+  */
+    void GrowContainer() {
+        int newSize = size * 2;    // double size of original
+        int *B = new int[newSize]; // allocate new memory
+
+        for (int i = 0; i < top; i++) { // copy values to new array
+            B[i] = A[i];
+        }
+
+        delete[] A; // delete old array
+
+        size = newSize; // save new size
+
+        A = B; // reset array pointer
+    }
 };
 
+// MAIN DRIVER
+// Simple Array Based Stack Usage:
+int main() {
+    ArrayStack stack;
+    int r = 0;
 
-int main(int argc, char** argv)
-{
-  float i = stod(argv[2]);
-  cout << i;
-  ArrayStack s;
+    for (int i = 0; i < 20; i++) {
+        r = rand() % 100;
+        r = i + 1;
+        if (!stack.Push(r)) {
+            cout << "Push failed" << endl;
+        }
+    }
+
+    for (int i = 0; i < 7; i++) {
+        stack.Pop();
+    }
+
+    stack.Print();
 }
