@@ -37,13 +37,13 @@ using namespace std;
 class ArrayStack
 {
 private:
-  int *A;              // pointer to array of int's
-  int size;            // current max stack size
-  int top;             // top of stack
-  float tooFullThres;  // Threshold for when to enlarge
-  float tooEmptyThres; // Threshold for when to shrink
-  float enlargeThres;  // Enlarging ratio
-  float shrinkThres;   // Shrinking ratio
+  int *A;                    // pointer to array of int's
+  int size{10};              // current max stack size
+  int top{-1};               // top of stack
+  float tooFullThres{1.0};   // Threshold for when to enlarge
+  float tooEmptyThres{0.15}; // Threshold for when to shrink
+  float enlargeThres{2.0};   // Enlarging ratio
+  float reduceThres{0.5};    // Shrinking ratio
 
 public:
   /**
@@ -58,11 +58,10 @@ public:
    * Returns:
    *     - NULL
    */
-  ArrayStack()
+  ArrayStack(): size(10), top(-1), tooFullThres(1.0), tooEmptyThres(0.15), enlargeThres(2.0), reduceThres(0.5)
   {
-    size = 10;
     A = new int[size];
-    top = -1;
+    
   }
 
   /**
@@ -77,15 +76,21 @@ public:
    * Returns:
    *     - NULL
    */
-  ArrayStack(int s)
+  ArrayStack(int s, float fT, float eT, float grow, float shrink): size(s), tooFullThres(fT), tooEmptyThres(eT), enlargeThres(grow), reduceThres(shrink)
   {
-    // Stack must be at least size 10
-    if(s < 10)
-    s = 10;
+    A = new int[s];
+  }
 
+  ArrayStack(int s, char** argv)
+  {
     size = s;
     A = new int[s];
     top = -1;
+
+    tooFullThres = stod(argv[1]);
+    tooEmptyThres = stod(argv[2]);
+    enlargeThres = stod(argv[3]);
+    reduceThres = stod(argv[4]);
   }
 
   /**
@@ -176,10 +181,6 @@ public:
    */
   int Pop()
   {
-    if(CheckResize())
-    {
-      ContainerShrink();
-    }
     if (!Empty())
     {
       return A[top--];
@@ -300,5 +301,7 @@ public:
 
 int main(int argc, char** argv)
 {
-
+  float i = stod(argv[2]);
+  cout << i;
+  ArrayStack s;
 }
