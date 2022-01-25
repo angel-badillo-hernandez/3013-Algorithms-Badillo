@@ -85,6 +85,28 @@ public:
   * Returns:
   *     - NULL
   */
+    ArrayStack(int s) {
+        size = s;
+        A = new int[s];
+        top = -1;
+        growThres = 1.00;
+        shrinkThres = 0.15;
+        growFactor = 2.0;
+        shrinkFactor = 0.5;
+    }
+
+/**
+  * ArrayStack
+  * 
+  * Description:
+  *      Constructor size param
+  * 
+  * Params:
+  *     - int size
+  * 
+  * Returns:
+  *     - NULL
+  */
     ArrayStack(int s, double gT, double sT, double gF, double sF) {
         size = s;
         A = new int[s];
