@@ -1,4 +1,7 @@
 {
     "C_Cpp.errorSquiggles": "Disabled",
-    "problems.showCurrentInStatus": true
+    "problems.showCurrentInStatus": true,
+    "files.associations": {
+        "iostream": "cpp"
+    }
 }
