@@ -380,8 +380,11 @@ int main(int argc, char **argv)
     }
     else
     {
-      S.Pop();
-      opCount++;
+      if(!S.Empty())
+      {
+        S.Pop();
+        opCount++;
+      }
       infile >> val;
     }
 
