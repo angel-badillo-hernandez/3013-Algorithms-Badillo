@@ -391,7 +391,7 @@ int main(int argc, char **argv)
     }
   }
 
-  cout << 
-
+  infile.close();
+  outfile.close();
   return 0;
 }
