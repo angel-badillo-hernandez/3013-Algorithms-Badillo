@@ -8,7 +8,7 @@
 *  Semester:         Spring 2022
 *
 *  Description:
-*        Implementation of an array based stack.
+*        Implementation of an array-based stack.
 *
 *  Usage:
 *        g++ main.cpp -o main
@@ -27,13 +27,13 @@ using namespace std;
  * ArrayStack
  *
  * Description:
- *      Array based stack
+ *      Array-based stack
  *
  * Public Methods:
  *      - See class below
  *
  * Usage:
- *      - See main program
+ *      - See the main program
  *
  */
 class ArrayStack
