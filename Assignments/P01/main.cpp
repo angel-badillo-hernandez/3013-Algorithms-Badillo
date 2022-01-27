@@ -18,6 +18,8 @@
 *****************************************************************************/
 
 #include <iostream>
+#include <fstream>
+#include <string>
 
 using namespace std;
 
@@ -52,7 +54,6 @@ private:
   // (top + 1) / size
 
 public:
-
   /**
    * ArrayStack
    *
@@ -99,9 +100,22 @@ public:
     shrinkFactor = 0.5;
   }
 
-  void SetGrowThres(double gT) { growThres = gT;}
+  void SetGrowThres(double gT) { growThres = gT; }
 
-  void SetShrinkThres(double sT){ shrinkThres = sT;}
+  void SetShrinkThres(double sT) { shrinkThres = sT; }
+
+  void SetGrowFactor(double gF) { growFactor = gF; }
+
+  void SetShrinkFactor(double sF) { shrinkFactor = sF; }
+
+  double GetGrowThres() { return growThres; }
+
+  double GetShrinkThres() { return shrinkThres; }
+
+  double GetGrowFactor() { return growFactor; }
+
+  double GetShrinkFactor() { return shrinkFactor; }
+
   /**
    * Public bool: Empty
    *
@@ -173,6 +187,8 @@ public:
    */
   int Pop()
   {
+    CheckResize();
+
     if (!Empty())
     {
       return A[top--];
@@ -217,12 +233,12 @@ public:
    */
   bool Push(int x)
   {
+    CheckResize();
 
     if (!Full())
     {
       A[++top] = x;
 
-      // checkGrowContainer();
       return true;
     }
 
@@ -295,9 +311,49 @@ public:
   }
 };
 
-// MAIN DRIVER
-// Simple Array Based Stack Usage:
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
-  
+  ArrayStack S;
+  ifstream infile;
+  ofstream outfile;
+
+  cout << string(90, '#') << "\nProgram 1 - Resizing the Stack\nCMPS 3013\nAngel Badillo Hernandez\n";
+
+  if (argc < 3)
+  {
+    cout << "\nNo file(s) specified.\nTry " << argv[0] << " inputFileName outputFileName\nor\n"
+         << argv[0] << " inputFileName outputFileName GrowThreshold ShrinkThreshold GrowFactor ShrinkFactor\n";
+    return 1;
+  }
+  else if (argc > 7)
+  {
+    cout << "\nToo many arguments.\nTry " << argv[0] << " inputFileName outputFileName\nor\n"
+         << argv[0] << " inputFileName outputFileName GrowThreshold ShrinkThreshold GrowFactor ShrinkFactor\n";
+    return 1;
+  }
+
+  switch (argc)
+  {
+    case 7:
+    S.SetShrinkFactor(stod(argv[6]));
+    [[fallthrough]];
+    case 6:
+    S.SetGrowFactor(stod(argv[5]));
+    [[fallthrough]];
+    case 5:
+    S.SetShrinkThres(stod(argv[4]));
+    [[fallthrough]];
+    case 4:
+    S.SetGrowThres(stod(argv[3]));
+    break;
+
+  }
+
+  cout << S.GetGrowThres();
+  cout << ' ' << S.GetShrinkThres();
+  cout << ' ' << S.GetGrowFactor();
+  infile.open(argv[1]);
+  outfile.open(argv[2]);
+
+  return 0;
 }
