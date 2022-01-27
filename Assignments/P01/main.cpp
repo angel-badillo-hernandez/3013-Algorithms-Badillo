@@ -364,7 +364,7 @@ int main(int argc, char **argv)
 
   infile.open(argv[1]);
   outfile.open(argv[2]);
-
+  
   int maxSize = 0;
   int val;
   int opCount = 0;
