@@ -103,6 +103,10 @@ public:
     resizeCount = 0;
   }
 
+  ~ArrayStack()
+  {
+    delete[] A;
+  }
   void SetGrowThres(double gT) { growThres = gT; }
 
   void SetShrinkThres(double sT) { shrinkThres = sT; }
@@ -328,7 +332,7 @@ int main(int argc, char **argv)
   ifstream infile;
   ofstream outfile;
 
-  cout << string(90, '#') << "\nProgram 1 - Resizing the Stack\nCMPS 3013\nAngel Badillo Hernandez\n";
+  cout << string(90, '#') << "\nProgram 1 - Resizing the Stack\nCMPS 3013\nAngel Badillo Hernandez\n\n";
 
   switch (argc)
   {
@@ -349,19 +353,20 @@ int main(int argc, char **argv)
   case 2:
     [[fallthrough]];
   case 1:
-    cout << "\nNo file(s) specified.\nTry " << argv[0] << " inputFileName outputFileName\nor\n"
+    cout << "No file(s) specified.\nTry " << argv[0] << " inputFileName outputFileName\nor\n"
          << argv[0] << " inputFileName outputFileName GrowThreshold ShrinkThreshold GrowFactor ShrinkFactor\n"
          << string(90, '#') << '\n';
     return 1;
     break;
   default:
-    cout << "\nToo many arguments.\nTry " << argv[0] << " inputFileName outputFileName\nor\n"
+    cout << "Too many arguments.\nTry " << argv[0] << " inputFileName outputFileName\nor\n"
          << argv[0] << " inputFileName outputFileName GrowThreshold ShrinkThreshold GrowFactor ShrinkFactor\n"
          << string(90, '#') << '\n';
     return 1;
     break;
   }
 
+  
   infile.open(argv[1]);
   outfile.open(argv[2]);
   
@@ -393,6 +398,12 @@ int main(int argc, char **argv)
       maxSize = S.GetSize();
     }
   }
+
+  cout << string(90, '#') << "\nProgram 1 - Resizing the Stack\nCMPS 3013\nAngel Badillo Hernandez\n\n"
+  << "Config Params:\nFullThreshold: " << S.GetGrowThres() << "\nShrinkThreshold: " << S.GetShrinkThres()
+  << "\nGrow Ratio: " << S.GetGrowFactor() << "\nShrink Ratio: " << S.GetShrinkFactor() << "\n\nProcessed "
+  << opCount << " commands.\n\nMax Stack Size: " << maxSize << "\nEnd Stack Size: " << S.GetSize()
+  << "\nStack Resized: " << S.GetResizeCount() << " times.\n\n" << string(90, '#') << '\n';
 
   infile.close();
   outfile.close();
