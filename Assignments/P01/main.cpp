@@ -309,7 +309,7 @@ public:
 
   void CheckResize()
   {
-    double capacity = (top + 1) / size;
+    double capacity = (double)(top + 1) / (double)size;
 
     if (capacity >= growThres)
     {
@@ -326,41 +326,44 @@ public:
   }
 };
 
+bool file_is_empty(ifstream& infile);
+
 int main(int argc, char **argv)
 {
   ArrayStack S;
   ifstream infile;
   ofstream outfile;
-
+  int maxSize = 0;
+  int opCount = 0;
+  int val;
+  
   cout << string(90, '#') << "\nProgram 1 - Resizing the Stack\nCMPS 3013\nAngel Badillo Hernandez\n\n";
 
   switch (argc)
   {
-  case 7:
-    S.SetShrinkFactor(stod(argv[6]));
-    [[fallthrough]];
   case 6:
-    S.SetGrowFactor(stod(argv[5]));
+    S.SetShrinkFactor(stod(argv[5]));
     [[fallthrough]];
   case 5:
-    S.SetShrinkThres(stod(argv[4]));
+    S.SetGrowFactor(stod(argv[4]));
     [[fallthrough]];
   case 4:
-    S.SetGrowThres(stod(argv[3]));
-    break;
-  case 3:
-    break; // Default values
-  case 2:
+    S.SetShrinkThres(stod(argv[3]));
     [[fallthrough]];
+  case 3:
+    S.SetGrowThres(stod(argv[2]));
+    break;
+  case 2:
+    break; // Default values
   case 1:
-    cout << "No file(s) specified.\nTry " << argv[0] << " inputFileName outputFileName\nor\n"
-         << argv[0] << " inputFileName outputFileName GrowThreshold ShrinkThreshold GrowFactor ShrinkFactor\n"
+    cout << "No file specified.\nTry " << argv[0] << " inputFileName\nor\n"
+         << argv[0] << " inputFileName GrowThreshold ShrinkThreshold GrowFactor ShrinkFactor\n"
          << string(90, '#') << '\n';
     return 1;
     break;
   default:
-    cout << "Too many arguments.\nTry " << argv[0] << " inputFileName outputFileName\nor\n"
-         << argv[0] << " inputFileName outputFileName GrowThreshold ShrinkThreshold GrowFactor ShrinkFactor\n"
+    cout << "Too many arguments.\nTry " << argv[0] << " inputFileName\nor\n"
+         << argv[0] << " inputFileName GrowThreshold ShrinkThreshold GrowFactor ShrinkFactor\n"
          << string(90, '#') << '\n';
     return 1;
     break;
@@ -368,29 +371,26 @@ int main(int argc, char **argv)
 
   
   infile.open(argv[1]);
-  outfile.open(argv[2]);
+  if(file_is_empty(infile) || !infile) // Empty or not opened
+  {
+    cout << "Input file is not valid!\n" << string(90, '#') << '\n';
+    return 1;
+  }
   
-  int maxSize = 0;
-  int val;
-  int opCount = 0;
-  infile >> val;
-
-  while(!infile.eof())
+  while(infile >> val)
   {
     if(val%2==0)
     {
       S.Push(val);
       opCount++;
-      infile >> val;
     }
     else
     {
       if(!S.Empty())
       {
         S.Pop();
-        opCount++;
       }
-      infile >> val;
+      opCount++;
     }
 
     if(maxSize < S.GetSize())
@@ -399,13 +399,17 @@ int main(int argc, char **argv)
     }
   }
 
-  cout << string(90, '#') << "\nProgram 1 - Resizing the Stack\nCMPS 3013\nAngel Badillo Hernandez\n\n"
-  << "Config Params:\nFullThreshold: " << S.GetGrowThres() << "\nShrinkThreshold: " << S.GetShrinkThres()
+  cout << "Config Params:\nFullThreshold: " << S.GetGrowThres() << "\nShrinkThreshold: " << S.GetShrinkThres()
   << "\nGrow Ratio: " << S.GetGrowFactor() << "\nShrink Ratio: " << S.GetShrinkFactor() << "\n\nProcessed "
   << opCount << " commands.\n\nMax Stack Size: " << maxSize << "\nEnd Stack Size: " << S.GetSize()
-  << "\nStack Resized: " << S.GetResizeCount() << " times.\n\n" << string(90, '#') << '\n';
+  << "\nStack Resized: " << S.GetResizeCount() << " times.\n" << string(90, '#') << '\n';
 
   infile.close();
   outfile.close();
   return 0;
+}
+
+bool file_is_empty(ifstream& infile)
+{
+  return infile.peek() == ifstream::traits_type::eof();
 }
