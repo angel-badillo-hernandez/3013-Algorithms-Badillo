@@ -244,16 +244,9 @@ public:
    */
   bool Push(int x)
   {
-    CheckResize();
-
-    if (!Full())
-    {
       A[++top] = x;
-
+      CheckResize();
       return true;
-    }
-
-    return false;
   }
 
   /**
@@ -315,7 +308,7 @@ public:
     {
       GrowContainer();
     }
-    else if ((capacity <= shrinkThres) && (size*shrinkFactor > 10))
+    else if ((capacity <= shrinkThres) && (size*shrinkFactor >= 10))
     {
       ShrinkContainer();
     }
