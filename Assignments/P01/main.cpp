@@ -12,9 +12,9 @@
 *
 *  Usage:
 *        g++ main.cpp -o main
-         g++ ./main inputFileName GrowThreshold ShrinkThreshold GrowFactor ShrinkFactor
+         ./main inputFileName GrowThreshold ShrinkThreshold GrowFactor ShrinkFactor
                       or
-         g++ ./main inputFileName
+         ./main inputFileName
 *
 *  Files:            main.cpp
 ***************************************************************************************/
