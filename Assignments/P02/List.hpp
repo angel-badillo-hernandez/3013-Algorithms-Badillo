@@ -7,33 +7,15 @@
 
 using namespace std;
 
-/**
- * Node Class
- * @brief Simple templated Node class for use in templated doubly linked list (List).
- *
- * @tparam T any type
- */
+
 class Node
 {
 public:
     string word{string()}; // Data value
     Node *next{nullptr};   // Points to next node on list
 
-    /**
-     * Node
-     * @brief Construct a new Node object.
-     *
-     */
     Node() {}
 
-    /**
-     * Node
-     * @brief Construct a new Node object with params.
-     *
-     * @param _data word to store in Node
-     * @param _prev pointer to previous Node
-     * @param _next pointer to next Node
-     */
     Node(string _data, Node *_next = nullptr)
     {
         this->word = _data;
@@ -41,12 +23,6 @@ public:
     }
 };
 
-/**
- * List Class
- * @brief Templated Doubly Linked List that makes use of subscript [] operator
- *        stream insertion << operator, and other array / vector-like methods.
- *
- */
 class List
 {
 private:
@@ -55,20 +31,10 @@ private:
     size_t list_size{0};  // Size of list
 
 public:
-    /**
-     * List
-     *
-     * @brief Construct a new empty List object.
-     *
-     */
+    
     List() {}
 
-    /**
-     * List
-     * @brief Construct a new List object by copying another.
-     *
-     * @param other List of type T.
-     */
+    
     List(const List &other)
     {
         Node *temp = other.front;
@@ -79,22 +45,11 @@ public:
         }
     }
 
-    /**
-     * ~List
-     * @brief Destroy the List object
-     *
-     */
     ~List()
     {
         this->clear();
     }
 
-    /**
-     * public: void resize
-     * @brief Resizes the list, and pushes default values if needed.
-     *
-     * @param _size new size of the list.
-     */
     void resize(size_t _size)
     {
         if (this->list_size == _size || (int)_size < 0) // If same size, or invalid value, no resize needed
@@ -115,13 +70,7 @@ public:
         }
     }
 
-    /**
-     * public: void resize
-     * @brief Resizes the list, and pushes '_data' to new nodes if needed.
-     *
-     * @param _size new size of the list.
-     * @param _data value to push in new nodes, if any.
-     */
+ 
     void resize(size_t _size, string _data)
     {
         if (this->list_size == _size || (int)_size < 0) // If same size, or invalid value, no resize needed
@@ -142,23 +91,11 @@ public:
         }
     }
 
-    /**
-     * public: bool empty
-     * @brief Tests if the list is empty.
-     *
-     * @return true if empty, false otherwise.
-     */
     bool empty()
     {
         return this->list_size == 0;
     }
 
-    /**
-     * public: void fill
-     * @brief Fills the list with '_data'.
-     *
-     * @param _data value to fill list with.
-     */
     void fill(string _data)
     {
         if (!(this->empty())) // If not empty
@@ -173,23 +110,12 @@ public:
         }
     }
 
-    /**
-     * public: void clear
-     * @brief Clears the list. Makes it empty.
-     *
-     */
     void clear()
     {
         while (!(this->empty()))
             this->pop_back();
     }
 
-    /**
-     * public: void push_front
-     * @brief Pushes a value to the front of the list.
-     *
-     * @param _data value to push to front of list.
-     */
     void push_front(string _data)
     {
         if (this->empty()) // If empty list
@@ -198,7 +124,7 @@ public:
         }
         else if (list_size == 1) // If one item
         {
-            this->front = new Node(_data, this->front); // New front->next points to old front / back
+            this->front = new Node(_data, this->back); // New front->next points to old front / back
         }
         else
         {
@@ -207,12 +133,6 @@ public:
         this->list_size++;
     }
 
-    /**
-     * public: void push_front
-     * @brief Pushes an entire List to the front of this list.
-     *
-     * @param other other list to push to front of this one.
-     */
     void push_front(List &other)
     {
         for (size_t i = other.size() - 1; i >= 0; i++)
@@ -221,12 +141,6 @@ public:
         }
     }
 
-    /**
-     * public: void push_back
-     * @brief Pushes a value to the back of the list.
-     *
-     * @param _data value to push to back of the list.
-     */
     void push_back(string _data)
     {
         if (this->empty())
@@ -243,17 +157,10 @@ public:
             Node *prev = this->back;      // Prev Node to new back Node
             this->back = new Node(_data); // New back Node
             prev->next = this->back;      // Prev Node linked to new back
-
         }
         this->list_size++;
     }
 
-    /**
-     * public: void push_back
-     * @brief Pushes an entire List to the front of this list.
-     *
-     * @param other other list to push to front of this one.
-     */
     void push_back(const List &other)
     {
         Node *temp = other.front;
@@ -265,13 +172,6 @@ public:
         }
     }
 
-    /**
-     * public: T& at
-     * @brief Returns read/write reference to element 'n' in the list. Same as List::operator[].
-     *
-     * @param n position of element.
-     * @return T& reference to element n.
-     */
     string &at(size_t n)
     {
         if ((int)n < 0 || n >= this->list_size)
@@ -289,18 +189,6 @@ public:
         }
     }
 
-    const string &at(size_t n)const
-    {
-        
-    }
-
-    /**
-     * public: void pop_front
-     * @brief Removes element from front of the list. Does not return
-     * the _dataue, however, so it must be retrieved before calling this
-     * function, if desired.
-     *
-     */
     void pop_front()
     {
         if (this->empty())
@@ -315,21 +203,26 @@ public:
         }
         else
         {
-            Node *deleteMe = this->front;    // Save pointer for deletion
-            this->front = this->front->next; // Move front down
-            this->front->prev = nullptr;
-            delete deleteMe;
+            Node *trash = front;
+            front = front->next;
+            delete trash;
             this->list_size--;
         }
     }
 
-    /**
-     * public: void pop_back
-     * @brief Removes element from back of the list. Does not return
-     * the _dataue, however, so it must be retrieved before calling this
-     * function, if desired.
-     *
-     */
+    Node *getPrev(Node *ptr)
+    {
+        Node *travel = front;
+        while (travel)
+        {
+            if (travel->next == ptr)
+            {
+                return travel;
+            }
+        }
+        return nullptr;
+    }
+
     void pop_back()
     {
         if (this->empty()) // Cannot pop from empty list
@@ -344,20 +237,12 @@ public:
         }
         else
         {
-            Node *deleteMe = this->back;   // Save pointer for deletion
-            this->back = this->back->prev; // Move back up
-            this->back->next = nullptr;    // Double linked list ends in nullptr
-            delete deleteMe;
-            this->list_size--;
+            Node* new_back = getPrev(this->back);
+            delete this->back;
+            this->back = new_back;
         }
     }
 
-    /**
-     * public: void erase
-     * @brief Removes element at position 'n' from the list.
-     *
-     * @param n position of the element to remove.
-     */
     void erase(size_t n)
     {
         if (this->empty()) // Cannot erase from empty list
@@ -391,12 +276,6 @@ public:
         }
     }
 
-    /**
-     * public: void remove
-     * @brief Removes all values that match '_value' from the list.
-     *
-     * @param _value value to be removed from the list.
-     */
     void remove(string _value)
     {
         size_t i = this->find(_value); // Get index of first occurence of _value
@@ -408,12 +287,6 @@ public:
         }
     }
 
-    /**
-     * @brief Finds first occurence of '_value' in the list and returns its position.
-     *
-     * @param _value value to be searched for.
-     * @return size_t - position where '_value' is located.
-     */
     size_t find(string _value)
     {
         Node *temp = this->front;
@@ -434,12 +307,6 @@ public:
         return (size_t)-1; // Returns -1 if not found
     }
 
-    /**
-     * public: void print
-     * @brief Prints the entire list to an output stream. Prints to cout by
-     *        default. Can print to ofstream as well.
-     *
-     */
     void print(ostream &os = cout)
     {
         if (!(this->empty())) // If not empty
@@ -461,48 +328,21 @@ public:
         }
     }
 
-    /**
-     * public: size_t size
-     * @brief Returns the size of the list.
-     *
-     * @return size_t size of the list.
-     */
-    const size_t size()const
+    const size_t size() const
     {
         return this->list_size;
     }
 
-    /**
-     * @brief Returns the maximum size possible (however it takes a lot of memory).
-     *
-     * @return size_t
-     */
     const size_t max_size()
     {
-        return INT32_MAX; //
+        return INT32_MAX;
     }
 
-    /**
-     * public: void swap
-     * @brief Swaps the contents of this list, with another. Utilizes
-     *        std::swap function.
-     *
-     * @param other other list to swap with this list.
-     */
     void swap(List &other)
     {
         std::swap<List>((*this), other);
     }
 
-    /**
-     * public: ostream& operator<<
-     * @brief Overloaded stream insertion << operator for printing list to
-     *        an output stream. Works with ofstream as well.
-     *
-     * @param os output stream to insert list to.
-     * @param L List of type T.
-     * @return ostream& output stream by reference.
-     */
     friend ostream &operator<<(ostream &os, const List &L)
     {
         Node *temp = L.front;
@@ -520,14 +360,6 @@ public:
         return os;
     }
 
-    /**
-     * @brief Overloaded subscript [] operator. Used for accessing an element at
-     *        position 'n' of the list. Returns read/write reference to that
-     *        element. Same as List::at.
-     *
-     * @param n position of element.
-     * @return T& reference to element n.
-     */
     string &operator[](size_t n)
     {
         if ((int)n < 0 || n >= this->list_size)
@@ -545,15 +377,6 @@ public:
         }
     }
 
-
-    /**
-     * @brief Overloaded assignment = operator. Used for assigning another
-     *        list to the current one in such a way to prevent shallowing
-     *        copying.
-     *
-     * @param rhs list on the right-hand side of assignment statement.
-     * @return List<T>& list to assign to left-hand list of assignment statement.
-     */
     List &operator=(const List &rhs)
     {
         if (this != &rhs)
