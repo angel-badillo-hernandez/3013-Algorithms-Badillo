@@ -213,7 +213,7 @@ public:
      *
      * @param other other list to push to front of this one.
      */
-    void push_front(const List &other)
+    void push_front(List &other)
     {
         for (size_t i = other.size() - 1; i >= 0; i++)
         {
@@ -235,13 +235,15 @@ public:
         }
         else if (this->list_size == 1)
         {
-            this->back = new Node(_data, this->back); // New back->prev points to old back
-            this->front->next = this->back;           // front->next points to new back
+            this->back = new Node(_data);
+            this->front->next = this->back;
         }
         else
         {
-            this->back = new Node(_data, this->back); // New back->prev points to old back
-            this->back->prev->next = this->back;      // Old back->next points to new back
+            Node *prev = this->back;      // Prev Node to new back Node
+            this->back = new Node(_data); // New back Node
+            prev->next = this->back;      // Prev Node linked to new back
+
         }
         this->list_size++;
     }
@@ -465,7 +467,7 @@ public:
      *
      * @return size_t size of the list.
      */
-    const size_t size()
+    const size_t size()const
     {
         return this->list_size;
     }
@@ -543,22 +545,6 @@ public:
         }
     }
 
-    const string &operator[](size_t n) const
-    {
-        if ((int)n < 0 || n >= this->list_size)
-        {
-            exit(1);
-        }
-        else
-        {
-            Node *temp = this->front;
-            for (size_t i = 0; i < n; i++)
-            {
-                temp = temp->next;
-            }
-            return temp->word;
-        }
-    }
 
     /**
      * @brief Overloaded assignment = operator. Used for assigning another
