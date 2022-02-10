@@ -2,113 +2,75 @@
 
 #include <iostream>
 #include <fstream>
-#include <array>
-#include <vector>
+#include <string>
+#include <initializer_list>
 
 using namespace std;
 
-class Node
+/**
+ * @brief Simple Node class for use in Singlely Linked List (of strings)
+ *
+ */
+class wordNode
 {
 public:
-    string word{string()}; // Data value
-    Node *next{nullptr};   // Points to next node on list
+    string word{string()};   // Data value
+    wordNode *next{nullptr}; // Points to next node on list
 
-    Node() {}
+    /**
+     * @brief Construct a new wordNode object.
+     *
+     */
+    wordNode();
 
-    Node(string _data, Node *_next = nullptr) : word{_data}, next{next} {}
+    /**
+     * @brief Construct a new wordNode object with params.
+     *
+     * @param _data string value to in the wordNode .
+     * @param _next wordNode pointer link to next item in list.
+     */
+    wordNode(string _data, wordNode *_next);
 };
 
+/**
+ * @brief Construct a new wordNode object.
+ *
+ */
+inline wordNode::wordNode() {}
+
+/**
+ * @brief Construct a new wordNode object with params.
+ *
+ * @param _data string value to in the wordNode .
+ * @param _next wordNode pointer link to next item in list.
+ */
+inline wordNode::wordNode(string _data, wordNode *_next = nullptr) : word{_data}, next{next} {}
+
+/**
+ * @brief Singely Linked List of words
+ * 
+ */
 class List
 {
 private:
-    Node *front{nullptr}; // Head of the list
-    Node *back{nullptr};  // Tail of the list
-    size_t list_size{0};  // Size of list
+    wordNode *front{nullptr}; // Head of the list
+    wordNode *back{nullptr};  // Tail of the list
+    size_t list_size{0};      // Size of list
 protected:
-    Node *getPrev(Node *ptr)
-    {
-        Node *prev = front;
-        for (size_t i = 0; i < list_size; i++)
-        {
-            if (prev->next == back)
-            {
-                return prev;
-            }
-            prev = prev->next;
-        }
-        return nullptr;
-    }
+    wordNode *prev_Node(wordNode *ptr);
 
 public:
-    List() {}
+    List();
 
-    List(initializer_list<string> S)
-    {
-        for (string x : S)
-        {
-            this->push_back(x);
-        }
-    }
+    List(initializer_list<string> S);
 
-    List(const List &other)
-    {
-        Node *temp = other.front;
-        while (temp)
-        {
-            this->push_back(temp->word);
-            temp = temp->next;
-        }
-    }
+    List(const List &other);
 
-    ~List()
-    {
-        this->clear();
-    }
+    ~List();
 
-    void resize(size_t _size)
-    {
-        if (this->list_size == _size || (int)_size < 0) // If same size, or invalid value, no resize needed
-        {
-            return;
-        }
-        else if (this->list_size > _size) // If new size is smaller, remove values
-        {
-            size_t removeAmount = this->list_size - _size;
-            for (size_t i = 0; i < removeAmount; i++)
-                this->pop_back();
-        }
-        else if (list_size < _size) // If new size is greater, add default values
-        {
-            size_t removeAmount = _size - this->list_size;
-            for (size_t i = 0; i < removeAmount; i++)
-                this->push_back(string());
-        }
-    }
+    void resize(size_t _size, string _data);
 
-    void resize(size_t _size, string _data)
-    {
-        if (this->list_size == _size || (int)_size < 0) // If same size, or invalid value, no resize needed
-        {
-            return;
-        }
-        else if (this->list_size > _size) // If new size is smaller, remove values
-        {
-            size_t removeAmount = this->list_size - _size;
-            for (size_t i = 0; i < removeAmount; i++)
-                this->pop_back();
-        }
-        else if (list_size < _size) // If new size is greater, add default values
-        {
-            size_t removeAmount = _size - this->list_size;
-            for (size_t i = 0; i < removeAmount; i++)
-                this->push_back(_data);
-        }
-    }
-
-    bool empty()
-    {
-        return this->list_size == 0;
-    }
+    bool empty();
 
     void fill(string _data);
 
@@ -152,14 +114,78 @@ public:
 
     List &operator=(const List &rhs);
 
-    inline List operator=(const initializer_list<string> S);
+    List operator=(const initializer_list<string> S);
 };
+
+inline List::List() {}
+
+inline wordNode *List::prev_Node(wordNode *ptr)
+{
+    wordNode *prev = front;
+    for (size_t i = 0; i < list_size; i++)
+    {
+        if (prev->next == back)
+        {
+            return prev;
+        }
+        prev = prev->next;
+    }
+    return nullptr;
+}
+
+inline List::List(initializer_list<string> L)
+{
+    for (string x : L)
+    {
+        this->push_back(x);
+    }
+}
+
+inline List::List(const List &other)
+{
+    wordNode *temp = other.front;
+    while (temp)
+    {
+        this->push_back(temp->word);
+        temp = temp->next;
+    }
+}
+
+inline List::~List()
+{
+    this->clear();
+}
+
+inline void List::resize(size_t _size, string _data = string())
+{
+    if (this->list_size == _size || (int)_size < 0) // If same size, or invalid value, no resize needed
+    {
+        return;
+    }
+    else if (this->list_size > _size) // If new size is smaller, remove values
+    {
+        size_t removeAmount = this->list_size - _size;
+        for (size_t i = 0; i < removeAmount; i++)
+            this->pop_back();
+    }
+    else if (list_size < _size) // If new size is greater, add default values
+    {
+        size_t removeAmount = _size - this->list_size;
+        for (size_t i = 0; i < removeAmount; i++)
+            this->push_back(_data);
+    }
+}
+
+inline bool List::empty()
+{
+    return this->list_size == 0;
+}
 
 inline void List::fill(string _data)
 {
     if (!(this->empty())) // If not empty
     {
-        Node *travel = this->front; // travel points to front
+        wordNode *travel = this->front; // travel points to front
 
         while (travel) // Travels until travel == nullptr
         {
@@ -179,15 +205,15 @@ inline void List::push_front(string _data)
 {
     if (this->empty()) // If empty list
     {
-        this->front = this->back = new Node(_data); // 1 item, so front & back are same
+        this->front = this->back = new wordNode(_data); // 1 item, so front & back are same
     }
     else if (list_size == 1) // If one item
     {
-        this->front = new Node(_data, this->back);
+        this->front = new wordNode(_data, this->back);
     }
     else
     {
-        this->front = new Node(_data, this->front); // New front->next points to old front
+        this->front = new wordNode(_data, this->front); // New front->next points to old front
     }
     this->list_size++;
 }
@@ -204,18 +230,18 @@ inline void List::push_back(string _data)
 {
     if (this->empty())
     {
-        this->front = this->back = new Node(_data); // 1 item, so front & back are same
+        this->front = this->back = new wordNode(_data); // 1 item, so front & back are same
     }
     else if (this->list_size == 1)
     {
-        this->back = new Node(_data);
+        this->back = new wordNode(_data);
         this->front->next = this->back;
     }
     else
     {
-        Node *prev = this->back;      // Prev Node to new back Node
-        this->back = new Node(_data); // New back Node
-        prev->next = this->back;      // Prev Node linked to new back
+        wordNode *prev = this->back;      // Prev wordNode to new back wordNode
+        this->back = new wordNode(_data); // New back wordNode
+        prev->next = this->back;          // Prev wordNode linked to new back
     }
     this->list_size++;
 }
@@ -236,7 +262,7 @@ inline string &List::at(size_t n)
     }
     else
     {
-        Node *temp = this->front;
+        wordNode *temp = this->front;
         for (size_t i = 0; i < n; i++)
         {
             temp = temp->next;
@@ -253,7 +279,7 @@ inline string &List::at(size_t n) const
     }
     else
     {
-        Node *temp = this->front;
+        wordNode *temp = this->front;
         for (size_t i = 0; i < n; i++)
         {
             temp = temp->next;
@@ -276,7 +302,7 @@ inline void List::pop_front()
     }
     else
     {
-        Node *trash = front;
+        wordNode *trash = front;
         front = front->next;
         delete trash;
         this->list_size--;
@@ -297,7 +323,7 @@ inline void List::pop_back()
     }
     else
     {
-        Node *prev = getPrev(this->back); // Get prev Node
+        wordNode *prev = prev_Node(this->back); // Get prev wordNode
         delete this->back;
         this->back = prev;          // Update back
         this->back->next = nullptr; // Update back->next
@@ -325,14 +351,14 @@ inline void List::erase(size_t n)
     }
     else // Travels through until it reaches index
     {
-        Node *temp = this->front;
-        Node *prev = nullptr;
+        wordNode *temp = this->front;
+        wordNode *prev = nullptr;
         for (size_t i = 0; i < n; i++)
         {
             prev = temp;
             temp = temp->next;
         }
-        prev->next = temp->next; // Links prev Node to temp->next Node
+        prev->next = temp->next; // Links prev wordNode to temp->next wordNode
         delete temp;
         this->list_size--;
     }
@@ -351,7 +377,7 @@ inline void List::remove(string _value)
 
 inline const size_t List::find(string _value)
 {
-    Node *temp = this->front;
+    wordNode *temp = this->front;
     size_t i = 0;
 
     while (temp)
@@ -373,7 +399,7 @@ inline void List::print(ostream &os = cout)
 {
     if (!(this->empty())) // If not empty
     {
-        Node *travel = this->front; // travel points to front
+        wordNode *travel = this->front; // travel points to front
 
         os << "[";
 
@@ -407,7 +433,7 @@ inline void List::swap(List &other)
 
 inline ostream &operator<<(ostream &os, const List &L)
 {
-    Node *temp = L.front;
+    wordNode *temp = L.front;
     os << "[";
     while (temp)
     {
@@ -430,7 +456,7 @@ inline string &List::operator[](size_t n)
     }
     else
     {
-        Node *temp = this->front;
+        wordNode *temp = this->front;
         for (size_t i = 0; i < n; i++)
         {
             temp = temp->next;
@@ -449,11 +475,11 @@ inline List &List::operator=(const List &rhs)
     return *this;
 }
 
-inline List List::operator=(const initializer_list<string> S)
+inline List List::operator=(const initializer_list<string> L)
 {
     this->clear();
 
-    for(string x : S)
+    for (string x : L)
     {
         this->push_back(x);
     }
