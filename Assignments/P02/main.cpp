@@ -7,6 +7,9 @@ using namespace std;
 int main()
 {
   List L;
-  L.push_front("1");
-  L.push_front("2");
+  L.resize(10, "string");
+
+  L = {"1", "2", "3"};
+
+  cout << L;
 }
