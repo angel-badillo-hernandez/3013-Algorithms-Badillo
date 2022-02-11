@@ -9,27 +9,27 @@ using namespace std;
 
 /**
  * Class WordNode
- * 
- * A simple node class that holds a string and a WordNode pointer.
- *        For use in singely linked list.
- * 
+ *
+ * Description: A simple node class that holds a string and a WordNode pointer.
+ *              For use in singely linked list.
+ *
  * Public_Methods:
- *      - WordNode()
- *      - WordNode(string _data, WordNode* _next)
- * 
+ *          WordNode()
+ *          WordNode(string _data, WordNode* _next)
+ *
  * Private_Methods:
  *      - N/A
- * 
- * Usage: 
+ *
+ * Usage:
  *      For use in List class defined below.
- *      - WordNode* back = new WordNode("A");        //
- *      - WordNode* front = new WordNode("B", back);  
+ *      - WordNode* back = new WordNode("A"); // Second arg defaults to nullptr
+ *      - WordNode* front = new WordNode("B", back);
  */
 class WordNode
 {
 public:
-    string word{string()};   // Data value
-    WordNode *next{nullptr}; // Points to next node on list
+    string word{string()};   // Data value. A "word".
+    WordNode *next{nullptr}; // Points to next node on list.
 
     /**
      * public: WordNode
@@ -49,12 +49,14 @@ public:
 };
 
 /**
+ * public: WordNode
  * @brief Construct a new WordNode object.
  *
  */
 inline WordNode::WordNode() {}
 
 /**
+ * public: WordNode()
  * @brief Construct a new WordNode object with params.
  *
  * @param _data string value to in the WordNode .
@@ -63,8 +65,49 @@ inline WordNode::WordNode() {}
 inline WordNode::WordNode(string _data, WordNode *_next = nullptr) : word{_data}, next{next} {}
 
 /**
- * @brief Singely Linked List of words
- * 
+ * Class WordNode
+ *
+ * Description: A "simple" singely linked list class with common methods, and
+ *              some interesting ones, such as subscript operator[], stream
+ *              insertion operator<<, and more.
+ *
+ * Public_Methods:
+ *                List()
+ *                List(intializer_list<string> S)
+ *                List(const List& other)
+ *                ~List()
+ *         void   resize(size_t _size, string _data)
+ *         bool   empty()
+ *         void   fill(string _data)
+ *         void   clear()
+ *         void   push_front(string _data)
+ *         void   push_front(const List &other)
+ *         void   push_back(string _data)
+ *         void   push_back(const List &other)
+ *      string&   at(size_t n)
+ *      string&   at(size_t n) const
+ *         void   pop_front()
+ *         void   pop_back()
+ *         void   erase(size_t n)
+ *         void   remove(string _value)
+ * const size_t   find(string _value)
+ *         void   print(ostream &os)
+ *       size_t   size() const
+ *       size_t   max_size() const
+ *         void   swap(List &other)
+ *       friend   ostream &operator<<(ostream &os, const List &L)
+ *      string&   operator[](size_t n)
+ *      string&   operator[](size_t n) const
+ *        List&   operator=(const List &rhs)
+ *         List   operator=(const initializer_list<string> S)
+ *
+ * Private_Methods:
+ *     WordNode* prev_node(WordNode *ptr)
+ *
+ * Usage:
+ *      For use in List class defined below.
+ *      - WordNode* back = new WordNode("A"); // Second arg defaults to nullptr
+ *      - WordNode* front = new WordNode("B", back);
  */
 class List
 {
@@ -72,7 +115,7 @@ private:
     WordNode *front{nullptr}; // Head of the list
     WordNode *back{nullptr};  // Tail of the list
     size_t list_size{0};      // Size of list
-protected:
+
     WordNode *prev_Node(WordNode *ptr);
 
 public:
@@ -481,7 +524,7 @@ inline string &List::operator[](size_t n)
     }
 }
 
-inline string &List::operator[](size_t n)const
+inline string &List::operator[](size_t n) const
 {
     if ((int)n < 0 || n >= this->list_size)
     {
