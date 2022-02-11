@@ -39,7 +39,6 @@ typedef std::chrono::duration<float> Fsec;
 using std::chrono::duration_cast;
 using std::this_thread::sleep_for;
 
-
 class Timer{
 private:
     int seed;
@@ -67,10 +66,10 @@ public:
         return secs.count();
     }
 
-    long MilliSeconds(){
+    double MilliSeconds(){
         auto dur = end - start;
-        auto millis = duration_cast<Msec>(dur);
-        return millis.count();
+        auto secs = duration_cast<Fsec>(dur) * 1000; // 1 seconds = 1000 milliseconds
+        return secs.count();
     }
 
     void Sleep(long x){
