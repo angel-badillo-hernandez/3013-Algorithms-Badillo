@@ -1,130 +1,73 @@
-/**
- * This program uses a "getch" function which means "get character".
- * However, getch does not print the character to the terminal, it 
- * lets you decide what to do based on what character you are pressing.
- * 
- * You can test which characters are being pressed using thier ascii values. 
- * 
- * An ascii table here should be helpful 
- *      http://www.asciitable.com/
- * 
- * Some integer values for some keys:
- *      LowerCase Letters   = 97(a) -> 122(z)
- *      UpperCase Letters   = 65(A) -> 90(Z)
- *      Enter Key           = 10
- *      Space Bar           = 32
- *      
- *      Arrow Keys          = Have same values as some letters
- *                            so we can't distinguish between 
- *                            the two (in this context).
- * 
- * Code below is a basic example of using a "getch" function along with
- * searching an array of words for partial matches. 
- * 
- * https://repl.it/@rugbyprof/getchexample#main.cpp
- */
-
 #include "mygetch.hpp"
-#include "termcolor.hpp"
+//#include "termcolor.hpp"
 #include "timer.hpp"
 #include <algorithm>
 #include <fstream>
 #include <iostream>
-#include <vector>
+#include "List.hpp"
 
 using namespace std;
 
-#define RED termcolor::red
-#define BLUE termcolor::blue
-#define YELLOW termcolor::yellow
-#define GREEN termcolor::green
-#define MAGENTA termcolor::magenta
-#define GREY termcolor::grey
+// #define RED termcolor::red
+// #define BLUE termcolor::blue
+// #define YELLOW termcolor::yellow
+// #define GREEN termcolor::green
+// #define MAGENTA termcolor::magenta
+// #define GREY termcolor::grey
 
-/**
- * Description:
- *      Originally wrote this to count size of input file so
- *      I could allocate enough memory for an array of strings
- *      but I went with a vector below. But I'm keeping it and
- *      using it anyway!
- * Params:
- *      string file_name - file to get the line count
- * 
- * Returns:
- *      int - line count
- */
-int CountLines(string file_name) {
-    ifstream inFile(file_name);
-    return count(istreambuf_iterator<char>(inFile), istreambuf_iterator<char>(), '\n');
+void LoadAnimals(List &L, string file_name)
+{
+    ifstream fin; // file to get animal names
+    string x;
+    fin.open(file_name); // open file for reading
+
+    while (fin >> x)
+    {
+        for (auto &c : x)
+        {
+            c = tolower(c);
+        }
+        L.push_back(x);
+    }
+    fin.close();
 }
 
-/**
- * Description:
- *      Loads a file of strings (words, names, whatever) reading them in
- *      with one word per line. So words must be delimited by newlines '\n'
- * Params:
- *      string file_name - file to get the line count
- * 
- * Returns:
- *      int - line count
- */
-vector<string> LoadAnimals(string file_name) {
-    ifstream fin;                            // file to get animal names
-    int count = (CountLines(file_name) + 1); // get size of input file
-    vector<string> array(count);             // allocate vector of correct size
+List FindAnimals(List L, string substring)
+{
+    List matches;
+    size_t found; // size_t is an integer position of
+                  // found item. -1 if its not found.
 
-    fin.open("animal_names.txt"); // open file for reading
-
-    // knowing the size of the file lets us treat
-    // it like an array without using .push_back(value)
-    for (int i = 0; i < count; i++) {
-        fin >> array[i];           // read in animals
-        for (auto &c : array[i]) { // c++ 11 style loop
-            c = tolower(c);        // lowercase the animal name
+    if (substring == "")
+    {
+        return matches;
+    }
+    for (int i = 0; i < L.size(); i++)
+    {                                 // loop through array
+        found = L[i].find(substring); // check for substr match
+        if (found != string::npos && found == 0)
+        {                            // if found >= 0 (its found then)
+            matches.push_back(L[i]); // add to matches
         }
     }
-    return array;
-}
-
-/**
- * Description:
- *      Finds partial matches in an array of strings and returns them. It
- *      doesn't matter where in the string the match is.
- * Params:
- *      vector<string>  array       - array to search
- *      string          substring   - substring to search for in each word
- * 
- * Returns:
- *      vector<string> - holding all the matches to substring
- */
-vector<string> FindAnimals(vector<string> array, string substring) {
-    vector<string> matches; // to hold any matches
-    size_t found;           // size_t is an integer position of
-                            // found item. -1 if its not found.
-
-    for (int i = 0; i < array.size(); i++) { // loop through array
-        found = array[i].find(substring);    // check for substr match
-        if (found != string::npos) {         // if found >= 0 (its found then)
-            matches.push_back(array[i]);     // add to matches
-        }
-    }
-
     return matches;
 }
 
-int main() {
-    char k;                 // holder for character being typed
-    string word = "";       // var to concatenate letters to
-    vector<string> animals; // array of animal names
-    vector<string> matches; // any matches found in vector of animals
-    int loc;                // location of substring to change its color
+int main()
+{
+    char k;           // holder for character being typed
+    string word = ""; // var to concatenate letters to
+    List animals;     // array of animal names
+    List matches;     // any matches found in vector of animals
+    int loc;          // location of substring to change its color
+    int numMatches;
 
     ofstream fout("temp.txt");
 
     Timer T;   // create a timer
     T.Start(); // start it
 
-    animals = LoadAnimals("animal_names.txt");
+    LoadAnimals(animals, "animal_names.txt");
 
     T.End(); // end the current timer
 
@@ -135,17 +78,23 @@ int main() {
     cout << "Type keys and watch what happens. Type capital Z to quit." << endl;
 
     // While capital Z is not typed keep looping
-    while ((k = getch()) != 'Z') {
+    while ((k = getch()) != 'Z')
+    {
 
         // Tests for a backspace and if pressed deletes
         // last letter from "word".
-        if ((int)k == 127) {
-            if (word.size() > 0) {
+        if ((int)k == 127)
+        {
+            if (word.size() > 0)
+            {
                 word = word.substr(0, word.size() - 1);
             }
-        } else {
+        }
+        else
+        {
             // Make sure a letter was pressed and only letter
-            if (!isalpha(k)) {
+            if (!isalpha(k))
+            {
                 cout << "Letters only!" << endl;
                 continue;
             }
@@ -153,43 +102,58 @@ int main() {
             // We know its a letter, lets make sure its lowercase.
             // Any letter with ascii value < 97 is capital so we
             // lower it.
-            if ((int)k < 97) {
+            if ((int)k < 97)
+            {
                 k += 32;
             }
             word += k; // append char to word
         }
 
+        T.Start();
         // Find any animals in the array that partially match
         // our substr word
         matches = FindAnimals(animals, word);
+        T.End();
 
-        if ((int)k != 32) { // if k is not a space print it
-            cout << "Keypressed: " << termcolor::blue << k << " = " << (int)k << termcolor::reset << endl;
-            cout << "Current Substr: " << termcolor::red << word << termcolor::reset << endl;
+        if ((int)k != 32)
+        { // if k is not a space print it
+
+            cout << T.Seconds() << " seconds to get matches." << endl;
+            cout << "Keypressed: " << k << " = " << (int)k << endl;
+            cout << "Current Substr: " << word << endl;
+            cout << matches.size() << " possible match(es).\n";
             cout << "Animals Found: ";
-            cout << termcolor::green;
-            // This prints out all found matches
-            for (int i = 0; i < matches.size(); i++) {
-                // find the substring in the word
-                loc = matches[i].find(word);
-                // if its found
-                if (loc != string::npos) {
-                    //print one letter at a time turning on red or green
-                    // depending on if the matching subtring is being printed
-                    for (int j = 0; j < matches[i].size(); j++) {
-                        // if we are printing the substring turn it red
-                        if (j >= loc && j <= loc + word.size() - 1) {
-                            cout << MAGENTA;
-                        } else {
-                            cout << GREEN;
+
+            if (matches.size() > 10)
+            numMatches = 10;
+            else
+            numMatches = matches.size();
+
+                // This prints out 10 found matches
+                for (int i = 0; i < numMatches; i++)
+                {
+                    // find the substring in the word
+                    loc = matches[i].find(word);
+                    // if its found
+                    if (loc != string::npos)
+                    {
+                        // print one letter at a time turning on red or green
+                        //  depending on if the matching subtring is being printed
+                        for (int j = 0; j < matches[i].size(); j++)
+                        {
+                            // if we are printing the substring turn it red
+                            if (j >= loc && j <= loc + word.size() - 1)
+                            {
+                            }
+                            else
+                            {
+                            }
+                            cout << matches[i][j];
                         }
-                        cout << matches[i][j];
                     }
-                    cout << GREEN;
+                    cout << " ";
                 }
-                cout << " ";
-            }
-            cout << termcolor::reset << endl
+            cout << endl
                  << endl;
         }
     }

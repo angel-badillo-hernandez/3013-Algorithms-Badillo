@@ -465,6 +465,23 @@ inline string &List::operator[](size_t n)
     }
 }
 
+inline string &List::operator[](size_t n)const
+{
+    if ((int)n < 0 || n >= this->list_size)
+    {
+        exit(1);
+    }
+    else
+    {
+        wordNode *temp = this->front;
+        for (size_t i = 0; i < n; i++)
+        {
+            temp = temp->next;
+        }
+        return temp->word;
+    }
+}
+
 inline List &List::operator=(const List &rhs)
 {
     if (this != &rhs)
