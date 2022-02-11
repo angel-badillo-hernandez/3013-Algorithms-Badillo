@@ -8,43 +8,59 @@
 using namespace std;
 
 /**
- * @brief Simple Node class for use in Singlely Linked List (of strings)
- *
+ * Class WordNode
+ * 
+ * A simple node class that holds a string and a WordNode pointer.
+ *        For use in singely linked list.
+ * 
+ * Public_Methods:
+ *      - WordNode()
+ *      - WordNode(string _data, WordNode* _next)
+ * 
+ * Private_Methods:
+ *      - N/A
+ * 
+ * Usage: 
+ *      For use in List class defined below.
+ *      - WordNode* back = new WordNode("A");        //
+ *      - WordNode* front = new WordNode("B", back);  
  */
-class wordNode
+class WordNode
 {
 public:
     string word{string()};   // Data value
-    wordNode *next{nullptr}; // Points to next node on list
+    WordNode *next{nullptr}; // Points to next node on list
 
     /**
-     * @brief Construct a new wordNode object.
+     * public: WordNode
+     * @brief Construct a new WordNode object.
      *
      */
-    wordNode();
+    WordNode();
 
     /**
-     * @brief Construct a new wordNode object with params.
+     * public: WordNode()
+     * @brief Construct a new WordNode object with params.
      *
-     * @param _data string value to in the wordNode .
-     * @param _next wordNode pointer link to next item in list.
+     * @param _data string value to in the WordNode .
+     * @param _next WordNode pointer link to next item in list.
      */
-    wordNode(string _data, wordNode *_next);
+    WordNode(string _data, WordNode *_next);
 };
 
 /**
- * @brief Construct a new wordNode object.
+ * @brief Construct a new WordNode object.
  *
  */
-inline wordNode::wordNode() {}
+inline WordNode::WordNode() {}
 
 /**
- * @brief Construct a new wordNode object with params.
+ * @brief Construct a new WordNode object with params.
  *
- * @param _data string value to in the wordNode .
- * @param _next wordNode pointer link to next item in list.
+ * @param _data string value to in the WordNode .
+ * @param _next WordNode pointer link to next item in list.
  */
-inline wordNode::wordNode(string _data, wordNode *_next = nullptr) : word{_data}, next{next} {}
+inline WordNode::WordNode(string _data, WordNode *_next = nullptr) : word{_data}, next{next} {}
 
 /**
  * @brief Singely Linked List of words
@@ -53,11 +69,11 @@ inline wordNode::wordNode(string _data, wordNode *_next = nullptr) : word{_data}
 class List
 {
 private:
-    wordNode *front{nullptr}; // Head of the list
-    wordNode *back{nullptr};  // Tail of the list
+    WordNode *front{nullptr}; // Head of the list
+    WordNode *back{nullptr};  // Tail of the list
     size_t list_size{0};      // Size of list
 protected:
-    wordNode *prev_Node(wordNode *ptr);
+    WordNode *prev_Node(WordNode *ptr);
 
 public:
     List();
@@ -119,9 +135,9 @@ public:
 
 inline List::List() {}
 
-inline wordNode *List::prev_Node(wordNode *ptr)
+inline WordNode *List::prev_Node(WordNode *ptr)
 {
-    wordNode *prev = front;
+    WordNode *prev = front;
     for (size_t i = 0; i < list_size; i++)
     {
         if (prev->next == back)
@@ -143,7 +159,7 @@ inline List::List(initializer_list<string> L)
 
 inline List::List(const List &other)
 {
-    wordNode *temp = other.front;
+    WordNode *temp = other.front;
     while (temp)
     {
         this->push_back(temp->word);
@@ -185,7 +201,7 @@ inline void List::fill(string _data)
 {
     if (!(this->empty())) // If not empty
     {
-        wordNode *travel = this->front; // travel points to front
+        WordNode *travel = this->front; // travel points to front
 
         while (travel) // Travels until travel == nullptr
         {
@@ -205,15 +221,15 @@ inline void List::push_front(string _data)
 {
     if (this->empty()) // If empty list
     {
-        this->front = this->back = new wordNode(_data); // 1 item, so front & back are same
+        this->front = this->back = new WordNode(_data); // 1 item, so front & back are same
     }
     else if (list_size == 1) // If one item
     {
-        this->front = new wordNode(_data, this->back);
+        this->front = new WordNode(_data, this->back);
     }
     else
     {
-        this->front = new wordNode(_data, this->front); // New front->next points to old front
+        this->front = new WordNode(_data, this->front); // New front->next points to old front
     }
     this->list_size++;
 }
@@ -230,18 +246,18 @@ inline void List::push_back(string _data)
 {
     if (this->empty())
     {
-        this->front = this->back = new wordNode(_data); // 1 item, so front & back are same
+        this->front = this->back = new WordNode(_data); // 1 item, so front & back are same
     }
     else if (this->list_size == 1)
     {
-        this->back = new wordNode(_data);
+        this->back = new WordNode(_data);
         this->front->next = this->back;
     }
     else
     {
-        wordNode *prev = this->back;      // Prev wordNode to new back wordNode
-        this->back = new wordNode(_data); // New back wordNode
-        prev->next = this->back;          // Prev wordNode linked to new back
+        WordNode *prev = this->back;      // Prev WordNode to new back WordNode
+        this->back = new WordNode(_data); // New back WordNode
+        prev->next = this->back;          // Prev WordNode linked to new back
     }
     this->list_size++;
 }
@@ -262,7 +278,7 @@ inline string &List::at(size_t n)
     }
     else
     {
-        wordNode *temp = this->front;
+        WordNode *temp = this->front;
         for (size_t i = 0; i < n; i++)
         {
             temp = temp->next;
@@ -279,7 +295,7 @@ inline string &List::at(size_t n) const
     }
     else
     {
-        wordNode *temp = this->front;
+        WordNode *temp = this->front;
         for (size_t i = 0; i < n; i++)
         {
             temp = temp->next;
@@ -302,7 +318,7 @@ inline void List::pop_front()
     }
     else
     {
-        wordNode *trash = front;
+        WordNode *trash = front;
         front = front->next;
         delete trash;
         this->list_size--;
@@ -323,7 +339,7 @@ inline void List::pop_back()
     }
     else
     {
-        wordNode *prev = prev_Node(this->back); // Get prev wordNode
+        WordNode *prev = prev_Node(this->back); // Get prev WordNode
         delete this->back;
         this->back = prev;          // Update back
         this->back->next = nullptr; // Update back->next
@@ -351,14 +367,14 @@ inline void List::erase(size_t n)
     }
     else // Travels through until it reaches index
     {
-        wordNode *temp = this->front;
-        wordNode *prev = nullptr;
+        WordNode *temp = this->front;
+        WordNode *prev = nullptr;
         for (size_t i = 0; i < n; i++)
         {
             prev = temp;
             temp = temp->next;
         }
-        prev->next = temp->next; // Links prev wordNode to temp->next wordNode
+        prev->next = temp->next; // Links prev WordNode to temp->next WordNode
         delete temp;
         this->list_size--;
     }
@@ -377,7 +393,7 @@ inline void List::remove(string _value)
 
 inline const size_t List::find(string _value)
 {
-    wordNode *temp = this->front;
+    WordNode *temp = this->front;
     size_t i = 0;
 
     while (temp)
@@ -399,7 +415,7 @@ inline void List::print(ostream &os = cout)
 {
     if (!(this->empty())) // If not empty
     {
-        wordNode *travel = this->front; // travel points to front
+        WordNode *travel = this->front; // travel points to front
 
         os << "[";
 
@@ -433,7 +449,7 @@ inline void List::swap(List &other)
 
 inline ostream &operator<<(ostream &os, const List &L)
 {
-    wordNode *temp = L.front;
+    WordNode *temp = L.front;
     os << "[";
     while (temp)
     {
@@ -456,7 +472,7 @@ inline string &List::operator[](size_t n)
     }
     else
     {
-        wordNode *temp = this->front;
+        WordNode *temp = this->front;
         for (size_t i = 0; i < n; i++)
         {
             temp = temp->next;
@@ -473,7 +489,7 @@ inline string &List::operator[](size_t n)const
     }
     else
     {
-        wordNode *temp = this->front;
+        WordNode *temp = this->front;
         for (size_t i = 0; i < n; i++)
         {
             temp = temp->next;
