@@ -21,10 +21,10 @@ partial matches. Minor note, Milliseconds() works because I edited Prof. Griffin
 |   5   | [timer.hpp](timer.hpp)               | Header for Timers                 |
 |   6   | [dictionary.txt](dictionary.txt)     | File to test program              |
 |   7   | [animal_names.txt](animal_names.txt) | Smaller file to test program      |
-|   8   | [out1.jpg](out1.jpg)                 | Screenshot of the output          |
-|   9   | [out2.jpg](out2.jpg)                 | Screenshot of the output          |
-|  10   | [out3.jpg](out3.jpg)                 | Screenshot of the output          |
-|  11   | [out4.jpg](out4.jpg)                 | Screenshot of the output          |
+|   8   | [out1.png](out1.png)                 | Screenshot of the output          |
+|   9   | [out2.png](out2.png)                 | Screenshot of the output          |
+|  10   | [out3.png](out3.png)                 | Screenshot of the output          |
+|  11   | [out4.png](out4.png)                 | Screenshot of the output          |
 
 
 ### Instructions
