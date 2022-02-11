@@ -102,12 +102,21 @@ inline WordNode::WordNode(string _data, WordNode *_next = nullptr) : word{_data}
  *         List   operator=(const initializer_list<string> S)
  *
  * Private_Methods:
- *     WordNode* prev_node(WordNode *ptr)
+ *    WordNode*   prev_node(WordNode *ptr)
  *
  * Usage:
- *      For use in List class defined below.
- *      - WordNode* back = new WordNode("A"); // Second arg defaults to nullptr
- *      - WordNode* front = new WordNode("B", back);
+ *      - List L;           // Creates empty list
+ *      - L.resize(10);     // Resizes list with default values
+ *      - L.push_back("A"); // Pushes a value to the back of the list
+ *      - L.push_front(""); // Pushes a value to the front of the list
+ *      - L.pop_back();     // Removes a value from the back of the list
+ *      - L.pop_front();    // Removes a value from the front of the list
+ *      - L[0] = "Hi";      // Returns read/write reference to specific element
+ *      - L.at(1) = "?";    // ``
+ *      - int i = L.size(); // Returns size of the list
+ *      - cout << L;        // Prints list
+ *      - L.print(cout)     // ``
+ *      - L.clear();        // Clears list
  */
 class List
 {
@@ -116,29 +125,100 @@ private:
     WordNode *back{nullptr};  // Tail of the list
     size_t list_size{0};      // Size of list
 
-    WordNode *prev_Node(WordNode *ptr);
+    /**
+     * private: prev_node
+     * @brief Returns a pointer to a WordNode one position before the one 
+     *        passed in.
+     * 
+     * @param ptr A pointer to a WordNode. 
+     * @return WordNode* 
+     */
+    WordNode *prev_node(WordNode *ptr);
 
 public:
+    /**
+     * public: List
+     * @brief Construct a new List object.
+     * 
+     */
     List();
 
+    /**
+     * public: List
+     * @brief Construct a new List object using an std::initalizer_list<string>.
+     * 
+     * @param S An intializer list containing strings.
+     */
     List(initializer_list<string> S);
 
+    /**
+     * public: List
+     * @brief Construct a new List object using another List object.
+     * 
+     * @param other A list to copy from.
+     */
     List(const List &other);
 
+    /**
+     * public: ~List
+     * @brief Destroy the List object.
+     * 
+     */
     ~List();
 
+    /**
+     * public: resize
+     * @brief Resizes the List. Removes or adds WordNodes as needed.
+     * 
+     * @param _size the new size of the List.
+     * @param _data value to use for possible new WordNodes.
+     */
     void resize(size_t _size, string _data);
 
+    /**
+     * public: empty
+     * @brief Tests if the List is empty.
+     * 
+     * @return true if empty, false otherwise.
+     */
     bool empty();
 
+    /**
+     * public: fill
+     * @brief Fills the list with specified value. Only reassigns data of existing WordNodes.
+     * 
+     * @param _data value to fill list with.
+     */
     void fill(string _data);
 
+    /**
+     * public: clear
+     * @brief Clears the list. Makes it completely empty.
+     *
+     */
     void clear();
 
+    /**
+     * public: push_front
+     * @brief Push a new value to the front of the List.
+     * 
+     * @param _data new value to prepend to List.
+     */
     void push_front(string _data);
 
+    /**
+     * public: push_front
+     * @brief Pushes an entire other list to the front of this List.
+     * 
+     * @param other other list to prepend to this List. 
+     */
     void push_front(const List &other);
 
+    /**
+     * @brief Push a new value to the back of the List.
+     * 
+     * @param _data a new value to append to List.
+     */
     void push_back(string _data);
 
     void push_back(const List &other);
@@ -178,7 +258,7 @@ public:
 
 inline List::List() {}
 
-inline WordNode *List::prev_Node(WordNode *ptr)
+inline WordNode *List::prev_node(WordNode *ptr)
 {
     WordNode *prev = front;
     for (size_t i = 0; i < list_size; i++)
@@ -382,7 +462,7 @@ inline void List::pop_back()
     }
     else
     {
-        WordNode *prev = prev_Node(this->back); // Get prev WordNode
+        WordNode *prev = prev_node(this->back); // Get prev WordNode
         delete this->back;
         this->back = prev;          // Update back
         this->back->next = nullptr; // Update back->next
