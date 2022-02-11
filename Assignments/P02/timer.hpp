@@ -66,6 +66,7 @@ public:
         return secs.count();
     }
 
+    // I edited this
     double MilliSeconds(){
         auto dur = end - start;
         auto secs = duration_cast<Fsec>(dur) * 1000; // 1 seconds = 1000 milliseconds

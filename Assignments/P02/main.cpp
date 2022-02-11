@@ -1,5 +1,33 @@
+/**************************************************************************************
+*
+*  Author:           Angel Badillo Hernandez  / @It-Is-Legend27
+*  Email:            badilloa022402@gmail.com / abadillo0224@my.msutexas.edu
+*  Label:            P02
+*  Title:            Processing in Linear Time
+*  Course:           CMPS-3013-201
+*  Semester:         Spring 2022
+*
+*  Description:
+*        Simulation of performing operations on a singely linked list.
+         Times how long it takes to load the file data to the list.
+         Times how long it takes get partial matches from a list.
+         Gets chars by "getching" and creates substrings to use for finding
+         partial matches. Minor note, milliseconds works because I edited Prof. Griffin's
+         "timer.hpp" file and fixed it.
+*
+*  Usage:
+*        g++ main.cpp -o main
+         ./main
+*
+*  Files:            main.cpp
+                     List.hpp
+                     timer.hpp
+                     mygetch.hpp
+                     termcolor.hpp
+                     dictionary.txt
+***************************************************************************************/
 #include "mygetch.hpp"
-//#include "termcolor.hpp"
+#include "termcolor.hpp"
 #include "timer.hpp"
 #include <algorithm>
 #include <fstream>
@@ -8,18 +36,18 @@
 
 using namespace std;
 
-// #define RED termcolor::red
-// #define BLUE termcolor::blue
-// #define YELLOW termcolor::yellow
-// #define GREEN termcolor::green
-// #define MAGENTA termcolor::magenta
-// #define GREY termcolor::grey
+#define RED termcolor::red
+#define BLUE termcolor::blue
+#define YELLOW termcolor::yellow
+#define GREEN termcolor::green
+#define MAGENTA termcolor::magenta
+#define GREY termcolor::grey
 
 /**
  * public: load_list
  * @brief Takes a List by reference, and populates it with data from an input
  *        file.
- * 
+ *
  * @param L An empty list to populate with values.
  * @param file_name The name of the file to be used.
  * @return void
@@ -28,10 +56,10 @@ void load_list(List &L, string file_name);
 
 /**
  * public: get_matches
- * @brief Clears a List and populates it with values from another List, but 
+ * @brief Clears a List and populates it with values from another List, but
  *        only values that partially/wholey match (prefix matches) the specified substring.
  *        Ignores empty strings.
- * 
+ *
  * @param L A List filled with string values.
  * @param matches An List to populate with matches from List L.
  * @param substring A substring to be used for finding matches.
@@ -47,17 +75,22 @@ int main()
     List matches;     // any matches found in vector of animals
     int loc;          // location of substring to change its color
     int numMatches;   // loop control variable for printing matches
-    
+
+    // Program Header
+    cout << GREEN << string(90, '#')
+         << "\nProgram 2 - Processing in Linear Time\nCMPS 3013\nAngel Badillo Hernandez\n"
+         << string(90, '#') << '\n' << termcolor::reset;
+
     Timer T;   // create a timer
     T.Start(); // start it
 
-    load_list(animals, "animal_names.txt");
+    load_list(animals, "dictionary.txt");
 
     T.End(); // end the current timer
 
     // print out how long it took to load the animals file
-    cout << T.Seconds() << " seconds to read in data from dictionary.txt\n";
-    cout << T.MilliSeconds() << " milliseconds to read in data from dictionary.txt\n";
+    cout << YELLOW << T.Seconds() << termcolor::reset << " seconds to read in data from dictionary.txt\n";
+    cout << BLUE << T.MilliSeconds() << termcolor::reset << " milliseconds to read in data from dictionary.txt\n";
 
     cout << "Type keys and watch what happens. Type capital Z to quit." << '\n';
 
@@ -98,17 +131,17 @@ int main()
         // Find any strings in the array that partially match
         // our substr word
         get_matches(animals, matches, word);
-        
+
         T.End(); // End timer for finding matches
 
         if ((int)k != 32)
         { // if k is not a space print it
 
-            cout << T.Seconds() << " seconds to get matches.\n";
-            cout << T.MilliSeconds() << " milliseconds to get matches\n";
-            cout << "Key pressed: " << k << " = " << (int)k << '\n';
-            cout << "Current Substring: " << word << '\n';
-            cout << matches.size() << " possible match(es).\n";
+            cout << YELLOW << T.Seconds() << termcolor::reset << " seconds to get matches.\n";
+            cout << BLUE << T.MilliSeconds() << termcolor::reset << " milliseconds to get matches\n";
+            cout << "Keypressed: " << BLUE << k << " = " << (int)k << termcolor::reset << '\n';
+            cout << "Current Substring: " << RED << word << termcolor::reset << '\n';
+            cout << matches.size() << " possible match(es).\n" << GREEN;
 
             // If more than 10 matches, only show first 10, else use total amount
             numMatches = matches.size() > 10 ? 10 : matches.size();
@@ -128,18 +161,22 @@ int main()
                         // if we are printing the substring turn it red
                         if (j >= loc && j <= loc + word.size() - 1)
                         {
+                            cout << MAGENTA;
                         }
                         else
                         {
+                            cout << GREEN;
                         }
                         cout << matches[i][j];
                     }
+                    cout << GREEN;
                 }
                 cout << " ";
             }
-            cout << "\n\n";
+            cout << termcolor::reset << "\n\n";
         }
     }
+    cout << GREEN << string(90, '#') << termcolor::reset << '\n'; // Footer just to show program ended
     return 0;
 }
 
@@ -147,7 +184,7 @@ int main()
  * public: load_list
  * @brief Takes a List by reference, and populates it with data from an input
  *        file.
- * 
+ *
  * @param L An empty list to populate with values.
  * @param file_name The name of the file to be used.
  * @return void
@@ -171,10 +208,10 @@ void load_list(List &L, string file_name)
 
 /**
  * public: get_matches
- * @brief Clears a List and populates it with values from another List, but 
+ * @brief Clears a List and populates it with values from another List, but
  *        only values that partially/wholey match (prefix matches) the specified substring.
  *        Ignores empty strings.
- * 
+ *
  * @param L A List filled with string values.
  * @param matches An List to populate with matches from List L.
  * @param substring A substring to be used for finding matches.
