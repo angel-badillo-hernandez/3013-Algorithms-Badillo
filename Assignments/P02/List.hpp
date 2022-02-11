@@ -215,36 +215,120 @@ public:
     void push_front(const List &other);
 
     /**
+     * public: push_back
      * @brief Push a new value to the back of the List.
      * 
      * @param _data a new value to append to List.
      */
     void push_back(string _data);
 
+    /**
+     * public: push_back
+     * @brief Pushes an entire other list to the front of this List.
+     * 
+     * @param other other list to append to List. 
+     */
     void push_back(const List &other);
-
+    
+    /**
+     * public: at
+     * @brief Returns a read/write reference to specified position in the
+     *        List.
+     * 
+     * @param n position of element (WordNode) to access.
+     * @return string& 
+     */
     string &at(size_t n);
 
+    /**
+     * public: at
+     * @brief Returns a constant read only reference to specified position in 
+     *        the List.
+     * 
+     * @param n  position of element (WordNode) to access.
+     * @return string& 
+     */
     string &at(size_t n) const;
 
+    /**
+     * public: pop_front
+     * @brief Remove the first item in the List. Does not return value.
+     * 
+     */
     void pop_front();
 
+    /**
+     * public: pop_back
+     * @brief Removes the last item in the List. Does not return value.
+     * 
+     */
     void pop_back();
 
+    /**
+     * public: erase
+     * @brief Erases a specific element (WordNode) from the List.
+     * 
+     * @param n position of element (WordNode) to remove.
+     */
     void erase(size_t n);
 
+    /**
+     * public: remove
+     * @brief Removes all instances of specified value from the List.
+     * 
+     * @param _value value to remove from List.
+     */
     void remove(string _value);
 
+    /**
+     * public: find
+     * @brief Searches for the first instance of a specified value in the List
+     *        and returns the index.
+     * 
+     * @param _value value being searched for.
+     * @return const size_t 
+     */
     const size_t find(string _value);
 
+    /**
+     * public: print
+     * @brief Prints the List to an output stream (cout by default).
+     * 
+     * @param os an output stream.
+     */
     void print(ostream &os);
 
+    /**
+     * public: size
+     * @brief Returns size of the List.
+     * 
+     * @return size_t 
+     */
     size_t size() const;
 
+    /**
+     * public: max_size
+     * @brief Returns max possible size of a List that this implementation allows.
+     * 
+     * @return size_t 
+     */
     size_t max_size() const;
 
+    /**
+     * public: swap
+     * @brief Swaps this List with another. Utilizes std::swap function.
+     * 
+     * @param other other List to swap with this List.
+     */
     void swap(List &other);
 
+    /**
+     * @brief Inserts List to an output stream for printing.
+     * 
+     * @param os output stream.
+     * @param L List to print.
+     * @return ostream& 
+     */
     friend ostream &operator<<(ostream &os, const List &L);
 
     string &operator[](size_t n);
