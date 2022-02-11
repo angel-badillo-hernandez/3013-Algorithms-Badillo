@@ -2,13 +2,12 @@
 ### Angel Badillo
 ### Description:
 
-This program simulates the usage of an array-based stack that resizes
-(enlarges or reduces) depending on if it passes certain thresholds.
-It either uses default values or uses command line arguments to set
-thresholds and resize factors. The program will read numbers from a file.
-If the number is even, it pushes it to the stack, if odd, it pops a number
-from the stack. Once the entire file has been read, the results of all the
-operations will be printed to standard output.
+Simulation of performing operations on a singely linked list.
+Times how long it takes to load the file data to the list.
+Times how long it takes get partial matches from a list.
+Gets chars by "getching" and creates substrings to use for finding
+partial matches. Minor note, Milliseconds() works because I edited Prof. Griffin's
+"timer.hpp" file.
 
 
 ### Files
@@ -30,11 +29,9 @@ operations will be printed to standard output.
 
 ### Instructions
 
-- Just compile and run it using example below. Have an input file with <br>
-  with odd and even integers for use in the program.
+- Just compile and run it using example below. The input file is hardcoded, since <br>
+  directions said to use [dictionary.txt](dictionary.txt), and did not specify otherwise.
 
 - Example Command:
   - g++ main.cpp -o main
-  - ./main inputFileName <br>
-  or
-  - ./main inputFileName GrowThreshold ShrinkThreshold GrowFactor ShrinkFactor
+  - ./main

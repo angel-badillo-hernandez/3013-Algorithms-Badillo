@@ -12,7 +12,8 @@
          Times how long it takes to load the file data to the list.
          Times how long it takes get partial matches from a list.
          Gets chars by "getching" and creates substrings to use for finding
-         partial matches.
+         partial matches. Minor note, Milliseconds() works because I edited Prof. Griffin's
+         "timer.hpp" file.
 *
 *  Usage:
 *        g++ main.cpp -o main
