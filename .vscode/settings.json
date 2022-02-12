@@ -22,6 +22,8 @@
         "sstream": "cpp",
         "streambuf": "cpp",
         "iosfwd": "cpp",
-        "chrono": "cpp"
+        "chrono": "cpp",
+        "cstdlib": "cpp",
+        "ratio": "cpp"
     }
 }
