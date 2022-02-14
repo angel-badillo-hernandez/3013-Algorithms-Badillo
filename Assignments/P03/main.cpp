@@ -1,4 +1,6 @@
 #include <iostream>
+#include <string>
+#include <fstream>
 #include "Trie.hpp"
 
 using namespace std;
@@ -7,9 +9,15 @@ using namespace std;
 int main()
 {
     Trie tree;
+    string x;
 
-    tree.insert("fortnite");
-    cout << tree.search("fortnite");
- 
+    ifstream infile("dictionary.txt");
+
+    while (infile >> x)
+    {
+        tree.insert(x);
+    }
+    
+    cout << tree.search("llama");
     return 0;
 }
