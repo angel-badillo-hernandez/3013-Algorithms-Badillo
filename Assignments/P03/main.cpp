@@ -5,19 +5,37 @@
 
 using namespace std;
 
+
+void load_trie(Node& tree, string file_name);
+
+//void get_matches();
+
 // C++ implementation of Trie data structure
 int main()
 {
     Trie tree;
     string x;
 
-    ifstream infile("dictionary.txt");
+    tree.insert("lol");
+    
+    
+    cout << tree.search("lol");
+    return 0;
+}
 
-    while (infile >> x)
+void load_trie(Trie tree,string file_name)
+{
+    ifstream fin; // file to get animal names
+    string x;
+    fin.open(file_name); // open file for reading
+
+    while (fin >> x)
     {
+        for (auto &c : x)
+        {
+            c = tolower(c);
+        }
         tree.insert(x);
     }
-    
-    cout << tree.search("llama");
-    return 0;
+    fin.close();
 }
