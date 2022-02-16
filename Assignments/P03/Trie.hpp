@@ -14,19 +14,21 @@ struct Node
     unordered_map<char, Node *> map{unordered_map<char, Node *>()};
 
     Node() {}
-};
 
-class Trie
-{
-private:
-    Node *root{nullptr};
+    ~Node()
+    {
+        for (unordered_map<char, Node*>::iterator it = map.begin(); it != map.end(); it++)
+        {
+            delete it->second;
+        }
+    }
 
     // Returns true if the given node has any children
-    bool haveChildren(Node const *curr)
+    bool haveChildren()
     {
         // don't use `(curr->map).size()` to check for children
 
-        for (auto it : curr->map)
+        for (auto it : this->map)
         {
             if (it.second != nullptr)
             {
@@ -36,6 +38,14 @@ private:
 
         return false;
     }
+};
+
+class Trie
+{
+private:
+    Node *root{nullptr};
+
+    
 
     // Recursive function to delete a string from a Trie
     bool deletion(Node *&curr, char *str)
@@ -55,7 +65,7 @@ private:
             if (curr != nullptr && curr->map.find(*str) != curr->map.end() &&
                 deletion(curr->map[*str], str + 1) && curr->isLeaf == false)
             {
-                if (!haveChildren(curr))
+                if (!(curr->haveChildren()))
                 {
                     delete curr;
                     curr = nullptr;
@@ -72,7 +82,7 @@ private:
         if (*str == '\0' && curr->isLeaf)
         {
             // if the current node is a leaf node and doesn't have any children
-            if (!haveChildren(curr))
+            if (curr->haveChildren())
             {
                 delete curr; // delete the current node
                 curr = nullptr;
@@ -93,7 +103,10 @@ private:
 
 public:
     Trie() {}
-    ~Trie() {}
+    ~Trie() 
+    {
+       delete root; 
+    }
 
     // Iterative function to insert a string into a Trie
     void insert(string str)

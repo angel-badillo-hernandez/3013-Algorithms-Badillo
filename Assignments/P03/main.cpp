@@ -6,7 +6,7 @@
 using namespace std;
 
 
-void load_trie(Node& tree, string file_name);
+void load_trie(Trie &tree, string file_name);
 
 //void get_matches();
 
@@ -16,14 +16,11 @@ int main()
     Trie tree;
     string x;
 
-    tree.insert("lol");
-    
-    
-    cout << tree.search("lol");
+    load_trie(tree, "dictionary.txt");
     return 0;
 }
 
-void load_trie(Trie tree,string file_name)
+void load_trie(Trie &tree,string file_name)
 {
     ifstream fin; // file to get animal names
     string x;
@@ -31,7 +28,7 @@ void load_trie(Trie tree,string file_name)
 
     while (fin >> x)
     {
-        for (auto &c : x)
+        for (char &c : x)
         {
             c = tolower(c);
         }
