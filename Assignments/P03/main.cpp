@@ -16,7 +16,8 @@ int main()
     Trie tree;
     string x;
 
-    load_trie(tree, "dictionary.txt");
+    tree.insert("lmao");
+    tree.insert("n");
     return 0;
 }
 

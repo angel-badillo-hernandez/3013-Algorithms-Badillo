@@ -17,9 +17,9 @@ struct Node
 
     ~Node()
     {
-        for (unordered_map<char, Node*>::iterator it = map.begin(); it != map.end(); it++)
+        for(pair<char, Node*> it: this->map)
         {
-            delete it->second;
+            delete it.second;
         }
     }
 
