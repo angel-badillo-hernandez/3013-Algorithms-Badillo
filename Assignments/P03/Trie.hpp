@@ -2,6 +2,7 @@
 // https://www.techiedelight.com/memory-efficient-trie-implementation-using-map-insert-search-delete/
 #include <iostream>
 #include <unordered_map>
+#include <vector>
 using namespace std;
 
 // Data structure to store a Trie node
@@ -17,7 +18,7 @@ struct Node
 
     ~Node()
     {
-        for(pair<char, Node*> it: this->map)
+        for (pair<char, Node *> it : this->map)
         {
             delete it.second;
         }
@@ -28,7 +29,7 @@ struct Node
     {
         // don't use `(curr->map).size()` to check for children
 
-        for (auto it : this->map)
+        for (pair<char, Node *> it : this->map)
         {
             if (it.second != nullptr)
             {
@@ -45,25 +46,23 @@ class Trie
 private:
     Node *root{nullptr};
 
-    
-
-    // Recursive function to delete a string from a Trie
-    bool deletion(Node *&curr, char *str)
+    bool remove(Node *&curr, string key)
     {
+
         // return if Trie is empty
         if (curr == nullptr)
         {
             return false;
         }
 
-        // if the end of the string is not reached
-        if (*str)
+        // if the end of the key is not reached
+        if (key.length())
         {
-            // recur for the node corresponding to the next character in
-            // the string and if it returns true, delete the current node
-            // (if it is non-leaf)
-            if (curr != nullptr && curr->map.find(*str) != curr->map.end() &&
-                deletion(curr->map[*str], str + 1) && curr->isLeaf == false)
+            // recur for the node corresponding to the next character in the key
+            // and if it returns true, delete the current node (if it is non-leaf)
+
+            if (curr != nullptr && curr->map.find(key[0]) != curr->map.end() &&
+                remove(curr->map[key[0]], key.substr(1)) && curr->isLeaf == false)
             {
                 if (!(curr->haveChildren()))
                 {
@@ -78,15 +77,18 @@ private:
             }
         }
 
-        // if the end of the string is reached
-        if (*str == '\0' && curr->isLeaf)
+        // if the end of the key is reached
+        if (key.length() == 0 && curr->isLeaf)
         {
             // if the current node is a leaf node and doesn't have any children
-            if (curr->haveChildren())
+            if (!(curr->haveChildren()))
             {
-                delete curr; // delete the current node
+                // delete the current node
+                delete curr;
                 curr = nullptr;
-                return true; // delete the non-leaf parent nodes
+
+                // delete the non-leaf parent nodes
+                return true;
             }
 
             // if the current node is a leaf node and has children
@@ -94,18 +96,57 @@ private:
             {
                 // mark the current node as a non-leaf node (DON'T DELETE IT)
                 curr->isLeaf = false;
-                return false; // don't delete its parent nodes
+
+                // don't delete its parent nodes
+                return false;
             }
         }
 
         return false;
     }
 
+    void find_all(Node *&curr, string key, vector<string> &results)
+    {
+
+        if (curr->isLeaf)
+        {
+            results.push_back(key);
+        }
+
+        for (pair<const char, Node *> &it : curr->map)
+        {
+            if (it.second)
+            {
+                find_all(it.second, key + it.first, results);
+            }
+        }
+    }
+
 public:
     Trie() {}
-    ~Trie() 
+    ~Trie()
     {
-       delete root; 
+        delete root;
+    }
+
+    bool remove(string key)
+    {
+        return remove(root, key);
+    }
+    
+    vector<string> find_all(string key)
+    {
+        Node *curr = root;
+        vector<string> results;
+
+        for (char &i : key)
+        {
+            // go to next node
+            curr = curr->map[i];
+        }
+
+        find_all(curr, key, results);
+        return results;
     }
 
     // Iterative function to insert a string into a Trie

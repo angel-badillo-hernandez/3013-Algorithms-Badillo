@@ -8,17 +8,12 @@ using namespace std;
 
 void load_trie(Trie &tree, string file_name);
 
-//void get_matches();
-
 // C++ implementation of Trie data structure
 int main()
 {
     Trie tree;
-    string x;
-
     tree.insert("lmao");
-    tree.insert("n");
-    return 0;
+    cout << tree.remove("lmao");
 }
 
 void load_trie(Trie &tree,string file_name)
@@ -31,7 +26,7 @@ void load_trie(Trie &tree,string file_name)
     {
         for (char &c : x)
         {
-            c = tolower(c);
+            c = toupper(c);
         }
         tree.insert(x);
     }
