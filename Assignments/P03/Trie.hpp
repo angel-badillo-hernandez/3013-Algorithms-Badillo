@@ -5,45 +5,39 @@
 #include <vector>
 using namespace std;
 
-// Data structure to store a Trie node
-struct Node
-{
-    // true when the node is a leaf node
-    bool isLeaf{false};
-
-    // each node stores a map to its child nodes
-    unordered_map<char, Node *> map{unordered_map<char, Node *>()};
-
-    Node() {}
-
-    ~Node()
-    {
-        for (pair<char, Node *> it : this->map)
-        {
-            delete it.second;
-        }
-    }
-
-    // Returns true if the given node has any children
-    bool haveChildren()
-    {
-        // don't use `(curr->map).size()` to check for children
-
-        for (pair<char, Node *> it : this->map)
-        {
-            if (it.second != nullptr)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-};
-
 class Trie
 {
 private:
+    // Data structure to store a Trie node
+    struct Node
+    {
+        bool isLeaf{false}; // true when the node is a leaf node
+
+        unordered_map<char, Node *> map{unordered_map<char, Node *>()}; // each node stores a map to its child nodes
+
+        Node() {}
+        Trie::Node::~Node()
+        {
+            for (pair<const char, Node *> &it : this->map)
+                delete it.second;
+        }
+       
+        bool Trie::Node::hasChildren()  // Returns true if the given node has any children
+        {
+            // don't use `(curr->map).size()` to check for children
+
+            for (pair<char, Node *> it : this->map)
+            {
+                if (it.second != nullptr)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    };
+
     Node *root{nullptr};
 
     bool remove(Node *&curr, string key)
@@ -64,7 +58,7 @@ private:
             if (curr != nullptr && curr->map.find(key[0]) != curr->map.end() &&
                 remove(curr->map[key[0]], key.substr(1)) && curr->isLeaf == false)
             {
-                if (!(curr->haveChildren()))
+                if (!(curr->hasChildren()))
                 {
                     delete curr;
                     curr = nullptr;
@@ -81,7 +75,7 @@ private:
         if (key.length() == 0 && curr->isLeaf)
         {
             // if the current node is a leaf node and doesn't have any children
-            if (!(curr->haveChildren()))
+            if (!(curr->hasChildren()))
             {
                 // delete the current node
                 delete curr;
@@ -133,7 +127,7 @@ public:
     {
         return remove(root, key);
     }
-    
+
     vector<string> find_all(string key)
     {
         Node *curr = root;

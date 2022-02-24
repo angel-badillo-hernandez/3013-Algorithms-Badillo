@@ -14,6 +14,7 @@ int main()
     Trie tree;
     tree.insert("lmao");
     cout << tree.remove("lmao");
+    
 }
 
 void load_trie(Trie &tree,string file_name)
