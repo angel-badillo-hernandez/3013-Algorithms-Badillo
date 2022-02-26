@@ -166,18 +166,25 @@ vector<string> Trie::find_all(string key)
 {
     Node *curr = root;
     vector<string> results;
+    bool isValidKey = false;
 
-    for (char i : key)
+    for (string::iterator it = key.begin(); it != key.end(); it++)
     {
-        curr = curr->map[i]; // go to next node
+        if (curr->map.find(*it) == curr->map.end())
+        {
+            isValidKey = false;
+            it = key.end() - 1;
+        }
+        else
+        {
+            isValidKey = true;
+            curr = curr->map[*it];
+        }
     }
 
-    for(auto it = key.begin(); it != key.end(); it++)
-    {
-        
-    }
+    if (isValidKey)
+        find_all(curr, key, results);
 
-    find_all(curr, key, results);
     return results;
 }
 

@@ -17,7 +17,10 @@ int main()
     vector<string> v = tree.find_all("Eren");
     for (auto &&i : v)
     {
+        if(!v.empty())
         cout << i << '\n';
+        else
+        cout << "Empty."; break;
     }
     
     
