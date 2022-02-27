@@ -23,6 +23,8 @@ private:
 
     Node *root{nullptr};
 
+    size_t trie_size{0};
+
     bool remove(Node *&curr, string key);
 
     void find_all(Node *&curr, string key, vector<string> &results);
@@ -34,33 +36,15 @@ public:
 
     bool empty();
 
-    bool remove(string key);
+    size_t size();
+
+    void remove(string key);
 
     vector<string> find_all(string key);
 
     void insert(string str);
 
-    // Iterative function to search a string in a Trie. It returns true
-    // if the string is found in the Trie; otherwise, it returns false.
-    bool search(string str)
-    {
-        if (root == nullptr)
-            return false;
-
-        Node *curr = root;
-
-        for (char i : str)
-        {
-            curr = curr->map[i];
-
-            if (curr == nullptr)
-                return false;
-        }
-
-        // return true if the current node is a leaf and the
-        // end of the string is reached
-        return curr->isLeaf;
-    }
+    bool search(string str);
 };
 
 Trie::Node::Node() {}
@@ -95,7 +79,6 @@ bool Trie::remove(Node *&curr, string key)
     {
         // recur for the node corresponding to the next character in the key
         // and if it returns true, delete the current node (if it is non-leaf)
-
         if (curr != nullptr && curr->map.find(key[0]) != curr->map.end() &&
             remove(curr->map[key[0]], key.substr(1)) && curr->isLeaf == false)
         {
@@ -123,6 +106,7 @@ bool Trie::remove(Node *&curr, string key)
             curr = nullptr;
 
             // delete the non-leaf parent nodes
+            trie_size--;
             return true;
         }
 
@@ -133,6 +117,7 @@ bool Trie::remove(Node *&curr, string key)
             curr->isLeaf = false;
 
             // don't delete its parent nodes
+            trie_size--;
             return false;
         }
     }
@@ -142,6 +127,7 @@ bool Trie::remove(Node *&curr, string key)
 
 void Trie::find_all(Node *&curr, string key, vector<string> &results)
 {
+    // If true, they the key is a valid string
     if (curr->isLeaf)
         results.push_back(key);
 
@@ -160,7 +146,12 @@ Trie::~Trie() { delete root; }
 
 bool Trie::empty() { return root == nullptr; }
 
-bool Trie::remove(string key) { return remove(root, key); }
+size_t Trie::size() { return trie_size; }
+
+void Trie::remove(string key)
+{ 
+    remove(root, key);
+}
 
 vector<string> Trie::find_all(string key)
 {
@@ -191,11 +182,8 @@ vector<string> Trie::find_all(string key)
 void Trie::insert(string str)
 {
     if (this->empty())
-    {
         root = new Node;
-    }
 
-    // start from the root node
     Node *curr = root;
 
     for (const char &i : str)
@@ -206,6 +194,29 @@ void Trie::insert(string str)
         curr = curr->map[i];
     }
 
-    // mark the current node as a leaf
+    // increment size if existing
+    if(curr->isLeaf == false)
+    trie_size++;
+
     curr->isLeaf = true;
+}
+
+bool Trie::search(string str)
+{
+    if (this->empty())
+        return false;
+
+    Node *curr = root;
+
+    for (const char &i : str)
+    {
+        if(curr->map.find(i) == curr->map.end())
+        return false;
+        else
+        curr = curr->map[i];
+    }
+
+    // return true if the current node is a leaf and the
+    // end of the string is reached
+    return curr->isLeaf;
 }

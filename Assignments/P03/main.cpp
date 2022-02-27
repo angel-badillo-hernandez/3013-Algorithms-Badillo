@@ -12,16 +12,14 @@ void load_trie(Trie &tree, string file_name);
 int main()
 {
     Trie tree;
-    //load_trie(tree, "dictionary.txt");
-    tree.insert("Eren Yeager");
-    tree.insert("EREN");
-    vector<string> v = tree.find_all("E");
-    for (auto &&i : v)
+    for (size_t i = 0; i < 3; i++)
     {
-        cout << i << '\n';
+        tree.insert("ErenEE");
+        tree.insert("ErenE");
     }
     
-    
+    tree.remove("ErenEE");
+    cout << tree.size();
 }
 
 void load_trie(Trie &tree,string file_name)
