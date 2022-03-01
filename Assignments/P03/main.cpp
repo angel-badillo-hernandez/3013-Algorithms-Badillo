@@ -5,24 +5,20 @@
 
 using namespace std;
 
-
 void load_trie(Trie &tree, string file_name);
 
 // C++ implementation of Trie data structure
 int main()
 {
     Trie tree;
-    for (size_t i = 0; i < 3; i++)
-    {
-        tree.insert("ErenEE");
-        tree.insert("ErenE");
-    }
+    string k = "E";
+    tree.insert({"E", "F", "H", "Eren", "El"});
+    tree.remove(k);
+    cout << k;
     
-    tree.remove("ErenEE");
-    cout << tree.size();
 }
 
-void load_trie(Trie &tree,string file_name)
+void load_trie(Trie &tree, string file_name)
 {
     ifstream fin; // file to get animal names
     string x;

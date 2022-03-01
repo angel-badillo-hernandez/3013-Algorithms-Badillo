@@ -3,6 +3,8 @@
 #include <iostream>
 #include <unordered_map>
 #include <vector>
+#include <string>
+#include <initializer_list>
 using namespace std;
 
 class Trie
@@ -25,9 +27,9 @@ private:
 
     size_t trie_size{0};
 
-    bool remove(Node *&curr, string key);
+    bool remove(Node *&curr, const string& key);
 
-    void find_all(Node *&curr, string key, vector<string> &results);
+    void find_all(Node *&curr, const string& key, vector<string> &results);
 
 public:
     Trie();
@@ -44,6 +46,7 @@ public:
 
     void insert(string str);
 
+    void insert(initializer_list<string> S);
     bool search(string str);
 };
 
@@ -65,7 +68,7 @@ bool Trie::Node::hasChildren()
     return false;
 }
 
-bool Trie::remove(Node *&curr, string key)
+bool Trie::remove(Node *&curr, const string& key)
 {
 
     // return if Trie is empty
@@ -125,7 +128,7 @@ bool Trie::remove(Node *&curr, string key)
     return false;
 }
 
-void Trie::find_all(Node *&curr, string key, vector<string> &results)
+void Trie::find_all(Node *&curr, const string& key, vector<string> &results)
 {
     // If true, they the key is a valid string
     if (curr->isLeaf)
@@ -199,6 +202,14 @@ void Trie::insert(string str)
     trie_size++;
 
     curr->isLeaf = true;
+}
+
+void Trie::insert(initializer_list<string> S)
+{
+    for (const string &str: S)
+    {
+        insert(str);
+    }
 }
 
 bool Trie::search(string str)
