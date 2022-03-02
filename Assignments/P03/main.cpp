@@ -14,7 +14,7 @@ int main()
     string k = "E";
     tree.insert({"E", "F", "H", "Eren", "El"});
     tree.remove(k);
-    cout << k;
+    cout << k; 
     
 }
 

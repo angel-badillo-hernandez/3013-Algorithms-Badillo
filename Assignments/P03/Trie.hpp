@@ -7,6 +7,7 @@
 #include <initializer_list>
 using namespace std;
 
+
 class Trie
 {
 private:
@@ -27,9 +28,9 @@ private:
 
     size_t trie_size{0};
 
-    bool remove(Node *&curr, const string& key);
+    bool remove(Node *&curr, const string &key);
 
-    void find_all(Node *&curr, const string& key, vector<string> &results);
+    void find_all(Node *&curr, const string &key, vector<string> &results);
 
 public:
     Trie();
@@ -38,7 +39,7 @@ public:
 
     bool empty();
 
-    size_t size();
+    size_t size() const;
 
     void remove(string key);
 
@@ -68,7 +69,7 @@ bool Trie::Node::hasChildren()
     return false;
 }
 
-bool Trie::remove(Node *&curr, const string& key)
+bool Trie::remove(Node *&curr, const string &key)
 {
 
     // return if Trie is empty
@@ -128,7 +129,7 @@ bool Trie::remove(Node *&curr, const string& key)
     return false;
 }
 
-void Trie::find_all(Node *&curr, const string& key, vector<string> &results)
+void Trie::find_all(Node *&curr, const string &key, vector<string> &results)
 {
     // If true, they the key is a valid string
     if (curr->isLeaf)
@@ -143,16 +144,16 @@ void Trie::find_all(Node *&curr, const string& key, vector<string> &results)
     }
 }
 
-Trie::Trie() {}
+inline Trie::Trie() {}
 
-Trie::~Trie() { delete root; }
+inline Trie::~Trie() { delete root; }
 
-bool Trie::empty() { return root == nullptr; }
+inline bool Trie::empty() { return root == nullptr; }
 
-size_t Trie::size() { return trie_size; }
+inline size_t Trie::size() const { return trie_size; }
 
-void Trie::remove(string key)
-{ 
+inline void Trie::remove(string key)
+{
     remove(root, key);
 }
 
@@ -182,31 +183,32 @@ vector<string> Trie::find_all(string key)
     return results;
 }
 
-void Trie::insert(string str)
+inline void Trie::insert(string str)
 {
     if (this->empty())
         root = new Node;
 
     Node *curr = root;
 
+    // Traverse through map, and insert new pair into map if necessary
     for (const char &i : str)
     {
-        if (curr->map.find(i) == curr->map.end())
-            curr->map[i] = new Node;
+        if (curr->map.find(i) == curr->map.end())              // If pair doesn't exist
+            curr->map.insert(pair<char, Node *>(i, new Node)); // Create a new one
 
-        curr = curr->map[i];
+        curr = curr->map.at(i);
     }
 
     // increment size if existing
-    if(curr->isLeaf == false)
-    trie_size++;
+    if (curr->isLeaf == false)
+        trie_size++;
 
     curr->isLeaf = true;
 }
 
-void Trie::insert(initializer_list<string> S)
+inline void Trie::insert(initializer_list<string> S)
 {
-    for (const string &str: S)
+    for (const string &str : S)
     {
         insert(str);
     }
@@ -221,10 +223,10 @@ bool Trie::search(string str)
 
     for (const char &i : str)
     {
-        if(curr->map.find(i) == curr->map.end())
-        return false;
+        if (curr->map.find(i) == curr->map.end())
+            return false;
         else
-        curr = curr->map[i];
+            curr = curr->map[i];
     }
 
     // return true if the current node is a leaf and the
