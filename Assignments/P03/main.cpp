@@ -11,11 +11,6 @@ void load_trie(Trie &tree, string file_name);
 int main()
 {
     Trie tree;
-    string k = "E";
-    tree.insert({"E", "F", "H", "Eren", "El"});
-    tree.remove(k);
-    cout << k; 
-    
 }
 
 void load_trie(Trie &tree, string file_name)

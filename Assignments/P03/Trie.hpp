@@ -1,12 +1,11 @@
 #pragma once
-// https://www.techiedelight.com/memory-efficient-trie-implementation-using-map-insert-search-delete/
 #include <iostream>
 #include <unordered_map>
 #include <vector>
 #include <string>
 #include <initializer_list>
+// https://www.techiedelight.com/memory-efficient-trie-implementation-using-map-insert-search-delete/
 using namespace std;
-
 
 class Trie
 {
@@ -15,13 +14,13 @@ private:
     {
         bool isLeaf{false}; // true when the node is a leaf node
 
-        unordered_map<char, Node *> map{unordered_map<char, Node *>()}; // each node stores a map to its child nodes
+        unordered_map<char, Node *> node_map; // each node stores a map to its child nodes
 
         Node();
 
         ~Node();
 
-        bool hasChildren();
+        bool has_children();
     };
 
     Node *root{nullptr};
@@ -45,9 +44,12 @@ public:
 
     vector<string> find_all(string key);
 
+    void find_all(string key, vector<string> &results);
+
     void insert(string str);
 
     void insert(initializer_list<string> S);
+
     bool search(string str);
 };
 
@@ -55,17 +57,17 @@ Trie::Node::Node() {}
 
 Trie::Node::~Node()
 {
-    for (pair<const char, Node *> &it : this->map)
+    // Recursively deletes the Node*'s in this object's Node::node_map.
+    for (pair<const char, Node *> &it : this->node_map)
         delete it.second;
 }
 
-bool Trie::Node::hasChildren()
+bool Trie::Node::has_children()
 {
-    for (pair<const char, Node *> &it : this->map)
-    {
-        if (it.second != nullptr)
+    // Iterate through this object's Node::node_map.
+    for (const pair<char, Node *> it : this->node_map)
+        if (it.second != nullptr) // If second item in pair is not nullptr, then has children
             return true;
-    }
     return false;
 }
 
@@ -83,10 +85,10 @@ bool Trie::remove(Node *&curr, const string &key)
     {
         // recur for the node corresponding to the next character in the key
         // and if it returns true, delete the current node (if it is non-leaf)
-        if (curr != nullptr && curr->map.find(key[0]) != curr->map.end() &&
-            remove(curr->map[key[0]], key.substr(1)) && curr->isLeaf == false)
+        if (curr != nullptr && curr->node_map.find(key[0]) != curr->node_map.end() &&
+            remove(curr->node_map[key[0]], key.substr(1)) && curr->isLeaf == false)
         {
-            if (!(curr->hasChildren()))
+            if (!(curr->has_children()))
             {
                 delete curr;
                 curr = nullptr;
@@ -103,7 +105,7 @@ bool Trie::remove(Node *&curr, const string &key)
     if (key.length() == 0 && curr->isLeaf)
     {
         // if the current node is a leaf node and doesn't have any children
-        if (!(curr->hasChildren()))
+        if (!(curr->has_children()))
         {
             // delete the current node
             delete curr;
@@ -131,13 +133,14 @@ bool Trie::remove(Node *&curr, const string &key)
 
 void Trie::find_all(Node *&curr, const string &key, vector<string> &results)
 {
-    // If true, they the key is a valid string
+    // If true, they the key is a valid string.
     if (curr->isLeaf)
         results.push_back(key);
 
-    for (pair<const char, Node *> &it : curr->map)
+    // Iterate through current curr->node_map to recursively find prefix-based partial matches.
+    for (pair<const char, Node *> &it : curr->node_map)
     {
-        if (it.second)
+        if (it.second) // If second item is not nullptr, find all matches with first item appended to key.
         {
             find_all(it.second, key + it.first, results);
         }
@@ -154,6 +157,7 @@ inline size_t Trie::size() const { return trie_size; }
 
 inline void Trie::remove(string key)
 {
+    // Calls recursive private remove method.
     remove(root, key);
 }
 
@@ -161,54 +165,83 @@ vector<string> Trie::find_all(string key)
 {
     Node *curr = root;
     vector<string> results;
-    bool isValidKey = false;
+    bool isValidPath = false;
 
+    // Uses key as a path to traverse through map, if path exists.
     for (string::iterator it = key.begin(); it != key.end(); it++)
     {
-        if (curr->map.find(*it) == curr->map.end())
+        if (curr->node_map.find(*it) == curr->node_map.end())
         {
-            isValidKey = false;
-            it = key.end() - 1;
+            isValidPath = false;
+            it = key.end() - 1; // Terminates loop
         }
         else
         {
-            isValidKey = true;
-            curr = curr->map[*it];
+            isValidPath = true;
+            curr = curr->node_map.at(*it); // Move curr to next position
         }
     }
 
-    if (isValidKey)
+    // If the path exists, find all prefix-based partial matches.
+    if (isValidPath)
         find_all(curr, key, results);
 
     return results;
 }
 
+void Trie::find_all(string key, vector<string> &results)
+{
+    Node *curr = root;
+    results.clear();
+    bool isValidPath = false;
+
+    // Uses key as a path to traverse through map, if path exists.
+    for (string::iterator it = key.begin(); it != key.end(); it++)
+    {
+        if (curr->node_map.find(*it) == curr->node_map.end())
+        {
+            isValidPath = false;
+            it = key.end() - 1; // Terminate loop
+        }
+        else
+        {
+            isValidPath = true;
+            curr = curr->node_map.at(*it); // Move curr to next position
+        }
+    }
+
+    // If the path exists, find all prefix-based partial matches.
+    if (isValidPath)
+        find_all(curr, key, results);
+}
+
 inline void Trie::insert(string str)
 {
-    if (this->empty())
+    if (this->empty()) // If Trie is empty, create a new Node
         root = new Node;
 
     Node *curr = root;
 
-    // Traverse through map, and insert new pair into map if necessary
-    for (const char &i : str)
+    // Traverse through map, and insert new pair<char Node*> into map if necessary
+    for (const char i : str)
     {
-        if (curr->map.find(i) == curr->map.end())              // If pair doesn't exist
-            curr->map.insert(pair<char, Node *>(i, new Node)); // Create a new one
+        if (curr->node_map.find(i) == curr->node_map.end())         // If pair doesn't exist
+            curr->node_map.insert(pair<char, Node *>(i, new Node)); // Create a new one
 
-        curr = curr->map.at(i);
+        curr = curr->node_map.at(i);
     }
 
-    // increment size if existing
+    // Increment size if string did not already exist
     if (curr->isLeaf == false)
         trie_size++;
 
-    curr->isLeaf = true;
+    curr->isLeaf = true; // Mark as valid string
 }
 
 inline void Trie::insert(initializer_list<string> S)
 {
-    for (const string &str : S)
+    // Inserts every string in list to the Trie
+    for (const string str : S)
     {
         insert(str);
     }
@@ -216,20 +249,21 @@ inline void Trie::insert(initializer_list<string> S)
 
 bool Trie::search(string str)
 {
-    if (this->empty())
+    if (this->empty()) // If Trie is empty, string doesn't exist
         return false;
 
     Node *curr = root;
 
+    // Traverse through map using string as a path
     for (const char &i : str)
     {
-        if (curr->map.find(i) == curr->map.end())
-            return false;
-        else
-            curr = curr->map[i];
+        if (curr->node_map.find(i) == curr->node_map.end()) // If char does not exist
+            return false;                                   // string is not in Trie.
+        else                                                // Otherwise, move curr to next position.
+            curr = curr->node_map.at(i);
     }
 
-    // return true if the current node is a leaf and the
+    // returns true if the current node is a leaf and the
     // end of the string is reached
     return curr->isLeaf;
 }
