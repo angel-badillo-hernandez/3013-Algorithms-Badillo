@@ -27,20 +27,28 @@ private:
 
     size_t trie_size{0};
 
-    bool remove(Node *&curr, const string &key);
+    bool remove(Node *&curr, const string &str);
 
     void find_all(Node *&curr, const string &key, vector<string> &results);
+
+    void copy_by_char(Node *&curr, const string &key);
 
 public:
     Trie();
 
+    Trie(Trie &other);
+
+    Trie(initializer_list<string> S);
+
     ~Trie();
+
+    void clear();
 
     bool empty();
 
     size_t size() const;
 
-    void remove(string key);
+    void remove(const string &str);
 
     vector<string> find_all(string key);
 
@@ -71,7 +79,35 @@ bool Trie::Node::has_children()
     return false;
 }
 
-bool Trie::remove(Node *&curr, const string &key)
+inline Trie::Trie() {}
+
+inline Trie::Trie(Trie &other)
+{
+    for (const pair<char, Node *> it : other.root->node_map)
+    {
+        string key(1, it.first);
+        copy_by_char(other.root, key);
+    }
+}
+
+inline Trie::Trie(initializer_list<string> S)
+{
+    // Inserts every string to Trie
+    for (const string str : S)
+    {
+        this->insert(S);
+    }
+}
+
+inline Trie::~Trie() { delete root; }
+
+inline void Trie::clear() { delete root; }
+
+inline bool Trie::empty() { return root == nullptr; }
+
+inline size_t Trie::size() const { return trie_size; }
+
+bool Trie::remove(Node *&curr, const string &str)
 {
 
     // return if Trie is empty
@@ -81,12 +117,12 @@ bool Trie::remove(Node *&curr, const string &key)
     }
 
     // if the end of the key is not reached
-    if (key.length())
+    if (str.length())
     {
         // recur for the node corresponding to the next character in the key
         // and if it returns true, delete the current node (if it is non-leaf)
-        if (curr != nullptr && curr->node_map.find(key[0]) != curr->node_map.end() &&
-            remove(curr->node_map[key[0]], key.substr(1)) && curr->isLeaf == false)
+        if (curr != nullptr && curr->node_map.find(str[0]) != curr->node_map.end() &&
+            remove(curr->node_map[str[0]], str.substr(1)) && curr->isLeaf == false)
         {
             if (!(curr->has_children()))
             {
@@ -102,7 +138,7 @@ bool Trie::remove(Node *&curr, const string &key)
     }
 
     // if the end of the key is reached
-    if (key.length() == 0 && curr->isLeaf)
+    if (str.length() == 0 && curr->isLeaf)
     {
         // if the current node is a leaf node and doesn't have any children
         if (!(curr->has_children()))
@@ -147,18 +183,26 @@ void Trie::find_all(Node *&curr, const string &key, vector<string> &results)
     }
 }
 
-inline Trie::Trie() {}
+void Trie::copy_by_char(Node *&curr, const string &key)
+{
+    // If true, they the key is a valid string.
+    if (curr->isLeaf)
+        this->insert(key);
 
-inline Trie::~Trie() { delete root; }
+    // Iterate through current curr->node_map to recursively find all words starting with the specified char
+    for (pair<const char, Node *> &it : curr->node_map)
+    {
+        if (it.second) // If second item is not nullptr, find all matches with first item appended to key.
+        {
+            copy_by_char(it.second, key + it.first);
+        }
+    }
+}
 
-inline bool Trie::empty() { return root == nullptr; }
-
-inline size_t Trie::size() const { return trie_size; }
-
-inline void Trie::remove(string key)
+inline void Trie::remove(const string &str)
 {
     // Calls recursive private remove method.
-    remove(root, key);
+    remove(root, str);
 }
 
 vector<string> Trie::find_all(string key)
@@ -243,7 +287,7 @@ inline void Trie::insert(initializer_list<string> S)
     // Inserts every string in list to the Trie
     for (const string str : S)
     {
-        insert(str);
+        this->insert(str);
     }
 }
 
