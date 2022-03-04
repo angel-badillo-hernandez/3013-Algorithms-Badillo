@@ -1,0 +1,12 @@
+[
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "# Bugs & Issues\n- None probably."
+  },
+  {
+    "kind": 2,
+    "language": "github-issues",
+    "value": "Trie tree;\n    load_trie(tree, \"dictionary.txt\");\n\n    vector<string> v;\n    Timer t;\n    t.Start();\n    \n    for (char c = 'A'; c <= 'Z'; c++)\n    {\n        tree.find_all(string(1,c), v);\n\n        for (auto &&i : v)\n        {\n            cout << i << '\\n';\n        }\n    }\n    t.End();\n    \n    cout << t.Seconds();"
+  }
+]

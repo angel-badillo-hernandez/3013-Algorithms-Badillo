@@ -12,44 +12,150 @@ class Trie
 private:
     struct Node
     {
-        bool isLeaf{false}; // true when the node is a leaf node
+        
+        bool isLeaf{false}; // Flag for marking strings
 
-        unordered_map<char, Node *> node_map; // each node stores a map to its child nodes
+        unordered_map<char, Node *> node_map; // Map to Child Nodes
 
+        /**
+         * public: Node
+         * @brief Construct a new empty Node object.
+         * 
+         */
         Node();
 
+        /**
+         * public: ~Node
+         * @brief Destroy the Node object. Recursively deallocates every child
+         *        Node, and their child Nodes, and so on.
+         * 
+         */
         ~Node();
 
-        bool has_children();
+        /**
+         * public: has_child
+         * @brief Tests if the Node has children.
+         * 
+         * @return true if has children, false otherwise.
+         */
+        bool has_child();
     };
 
-    Node *root{nullptr};
+    Node *root{nullptr}; // Root of the Trie
 
-    size_t trie_size{0};
+    size_t trie_size{0}; // Size of Trie
 
+    /**
+     * private: remove
+     * @brief Recursive private method that removes a string from the Trie.
+     * 
+     * @param curr current position in the Trie.
+     * @param str string to remove from Trie.
+     * @return true when a Node is to be deleted, false otherwise. 
+     */
     bool remove(Node *&curr, const string &str);
-
+    
+    /**
+     * private: find_all
+     * @brief Recursive private method for searching for prefix-based matches
+     *        using a key, then storing any matches.
+     * 
+     * @param curr current position in the Trie. 
+     * @param key substring use for finding prefix-based matches in the Trie.
+     * @param results vector containing all prefix_based matches.
+     */
     void find_all(Node *&curr, const string &key, vector<string> &results);
 
+    /**
+     * private: copy_by_char
+     * @brief Recursive method for copying strings from another instance of a
+     *        Trie, starting at the root, then travels through the Trie, copying any
+     *        string to "this" instance of a Trie.
+     * 
+     * @param curr 
+     * @param key 
+     */
     void copy_by_char(Node *&curr, const string &key);
 
+    /**
+     * private: get_root
+     * @brief Returns a pointer to the root of the Trie.
+     * 
+     * @return Node*, pointer to root.
+     */
+    Node* get_root()const;
+
 public:
+
+    /**
+     * public: Trie
+     * @brief Construct a new empty Trie object.
+     * 
+     */
     Trie();
 
-    Trie(Trie &other);
+    /**
+     * public: Trie
+     * @brief Construct a new Trie object by copying from another instance.
+     * 
+     * @param other Trie to copy from. 
+     */
+    Trie(const Trie &other);
 
+    /**
+     * public: Trie
+     * @brief Construct a new Trie object using an intializer list of strings.
+     * 
+     * @param S intializer list of strings to insert into Trie.
+     */
     Trie(initializer_list<string> S);
 
+    /**
+     * public: ~Trie
+     * @brief Destroy the Trie object. Recursively deallocates every Node in
+     *        the Trie.
+     * 
+     */
     ~Trie();
 
+    /**
+     * public: clear
+     * @brief Clears the Trie object.
+     * 
+     */
     void clear();
 
-    bool empty();
+    /**
+     * public: empty
+     * @brief Tests if the Trie is empty, tests with root, not size of Trie.
+     * 
+     * @return true if empty, false otherwise.
+     */
+    bool empty()const;
 
+    /**
+     * public: size
+     * @brief Returns the size of the Trie.
+     * 
+     * @return size_t, size of Trie. 
+     */
     size_t size() const;
 
+    /**
+     * public: remove
+     * @brief Removes a string from a Trie.
+     * 
+     * @param str string to remove from Trie.
+     */
     void remove(const string &str);
 
+    /**
+     * @brief Searches for prefix-based partial matches using a key, stores
+     *        matches in a vector of strings, then returns the vector.
+     * 
+     * @param key substring used to search for prefix_based partial matches.
+     * @return vector<string>, all prefix_based partial matches.
+     */
     vector<string> find_all(string key);
 
     void find_all(string key, vector<string> &results);
@@ -70,7 +176,7 @@ Trie::Node::~Node()
         delete it.second;
 }
 
-bool Trie::Node::has_children()
+bool Trie::Node::has_child()
 {
     // Iterate through this object's Node::node_map.
     for (const pair<char, Node *> it : this->node_map)
@@ -81,12 +187,17 @@ bool Trie::Node::has_children()
 
 inline Trie::Trie() {}
 
-inline Trie::Trie(Trie &other)
+inline Trie::Trie(const Trie &other)
 {
+    if(other.empty())
+    {
+        return;
+    }
+    Node* curr = other.root->node_map.begin()->second;
     for (const pair<char, Node *> it : other.root->node_map)
     {
         string key(1, it.first);
-        copy_by_char(other.root, key);
+        copy_by_char(curr, key);
     }
 }
 
@@ -103,7 +214,7 @@ inline Trie::~Trie() { delete root; }
 
 inline void Trie::clear() { delete root; }
 
-inline bool Trie::empty() { return root == nullptr; }
+inline bool Trie::empty()const { return root == nullptr; }
 
 inline size_t Trie::size() const { return trie_size; }
 
@@ -124,7 +235,7 @@ bool Trie::remove(Node *&curr, const string &str)
         if (curr != nullptr && curr->node_map.find(str[0]) != curr->node_map.end() &&
             remove(curr->node_map[str[0]], str.substr(1)) && curr->isLeaf == false)
         {
-            if (!(curr->has_children()))
+            if (!(curr->has_child()))
             {
                 delete curr;
                 curr = nullptr;
@@ -141,7 +252,7 @@ bool Trie::remove(Node *&curr, const string &str)
     if (str.length() == 0 && curr->isLeaf)
     {
         // if the current node is a leaf node and doesn't have any children
-        if (!(curr->has_children()))
+        if (!(curr->has_child()))
         {
             // delete the current node
             delete curr;
@@ -197,6 +308,12 @@ void Trie::copy_by_char(Node *&curr, const string &key)
             copy_by_char(it.second, key + it.first);
         }
     }
+}
+
+Trie::Node* Trie::get_root()const
+{
+    Node* curr = root;
+    return curr;
 }
 
 inline void Trie::remove(const string &str)

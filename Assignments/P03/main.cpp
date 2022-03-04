@@ -11,25 +11,9 @@ void load_trie(Trie &tree, string file_name);
 // C++ implementation of Trie data structure
 int main()
 {
-    Trie tree;
-    load_trie(tree, "dictionary.txt");
-
-    vector<string> v;
-    Timer t;
-    t.Start();
+    Trie A = {"l"};
+    Trie B(A);
     
-    for (char c = 'A'; c <= 'Z'; c++)
-    {
-        tree.find_all(string(1,c), v);
-
-        for (auto &&i : v)
-        {
-            cout << i << '\n';
-        }
-    }
-    t.End();
-
-    cout << t.Seconds();
 }
 
 void load_trie(Trie &tree, string file_name)
