@@ -12,7 +12,7 @@ class Trie
 private:
     struct Node
     {
-        
+
         bool isLeaf{false}; // Flag for marking strings
 
         unordered_map<char, Node *> node_map; // Map to Child Nodes
@@ -20,7 +20,7 @@ private:
         /**
          * public: Node
          * @brief Construct a new empty Node object.
-         * 
+         *
          */
         Node();
 
@@ -28,14 +28,14 @@ private:
          * public: ~Node
          * @brief Destroy the Node object. Recursively deallocates every child
          *        Node, and their child Nodes, and so on.
-         * 
+         *
          */
         ~Node();
 
         /**
          * public: has_child
          * @brief Tests if the Node has children.
-         * 
+         *
          * @return true if has children, false otherwise.
          */
         bool has_child();
@@ -46,66 +46,65 @@ private:
     size_t trie_size{0}; // Size of Trie
 
     /**
-     * private: remove
-     * @brief Recursive private method that removes a string from the Trie.
-     * 
-     * @param curr current position in the Trie.
-     * @param str string to remove from Trie.
-     * @return true when a Node is to be deleted, false otherwise. 
+     * private: copy_by_char
+     * @brief Recursive method for copying strings from another instance of a
+     *        Trie, starting at the root, then travels through the Trie, copying any
+     *        string to "this" instance of a Trie.
+     *
+     * @param curr
+     * @param key
      */
-    bool remove(Node *&curr, const string &str);
-    
+    void copy_by_char(Node *&curr, const string &key);
+
     /**
      * private: find_all
      * @brief Recursive private method for searching for prefix-based matches
      *        using a key, then storing any matches.
-     * 
-     * @param curr current position in the Trie. 
+     *
+     * @param curr current position in the Trie.
      * @param key substring use for finding prefix-based matches in the Trie.
      * @param results vector containing all prefix_based matches.
      */
     void find_all(Node *&curr, const string &key, vector<string> &results);
 
     /**
-     * private: copy_by_char
-     * @brief Recursive method for copying strings from another instance of a
-     *        Trie, starting at the root, then travels through the Trie, copying any
-     *        string to "this" instance of a Trie.
-     * 
-     * @param curr 
-     * @param key 
-     */
-    void copy_by_char(Node *&curr, const string &key);
-
-    /**
      * private: get_root
      * @brief Returns a pointer to the root of the Trie.
-     * 
+     *
      * @return Node*, pointer to root.
      */
-    Node* get_root()const;
+    Node *get_root() const;
+
+    /**
+     * private: remove
+     * @brief Recursive private method that removes a string from the Trie.
+     *
+     * @param curr current position in the Trie.
+     * @param str string to remove from Trie.
+     * @return true when a Node is to be deleted, false otherwise.
+     */
+    bool remove(Node *&curr, const string &str);
 
 public:
-
     /**
      * public: Trie
      * @brief Construct a new empty Trie object.
-     * 
+     *
      */
     Trie();
 
     /**
      * public: Trie
      * @brief Construct a new Trie object by copying from another instance.
-     * 
-     * @param other Trie to copy from. 
+     *
+     * @param other Trie to copy from.
      */
     Trie(const Trie &other);
 
     /**
      * public: Trie
      * @brief Construct a new Trie object using an intializer list of strings.
-     * 
+     *
      * @param S intializer list of strings to insert into Trie.
      */
     Trie(initializer_list<string> S);
@@ -114,61 +113,100 @@ public:
      * public: ~Trie
      * @brief Destroy the Trie object. Recursively deallocates every Node in
      *        the Trie.
-     * 
+     *
      */
     ~Trie();
 
     /**
      * public: clear
      * @brief Clears the Trie object.
-     * 
+     *
      */
     void clear();
 
     /**
      * public: empty
      * @brief Tests if the Trie is empty, tests with root, not size of Trie.
-     * 
+     *
      * @return true if empty, false otherwise.
      */
-    bool empty()const;
+    bool empty() const;
 
     /**
-     * public: size
-     * @brief Returns the size of the Trie.
-     * 
-     * @return size_t, size of Trie. 
+     * public: find_all
+     * @brief Searches for prefix-based partial matches using a key, stores
+     *        matches in a vector of strings, then returns the vector.
+     *
+     * @param key substring used to search for prefix-based partial matches.
+     * @return vector<string>, all prefix-based partial matches.
      */
-    size_t size() const;
+    vector<string> find_all(string key);
+
+    /**
+     * public: find_all
+     * @brief Searches for prefix-based partial matches using a key, stores
+     *        matches in a vector of strings, then returns the vector.
+     *
+     * @param key substring used to search for prefix-based partial matches.
+     * @param results vector of all prefix-based partial matches.
+     */
+    void find_all(string key, vector<string> &results);
+
+    /**
+     * public: insert
+     * @brief Inserts a string into the Trie.
+     *
+     * @param str string to insert into the Trie.
+     */
+    void insert(string str);
+
+    /**
+     * @brief Inserts a list of strings from an initializer list of strings
+     *        into the Trie.
+     *
+     * @param S intializer list of strings.
+     */
+    void insert(initializer_list<string> S);
 
     /**
      * public: remove
      * @brief Removes a string from a Trie.
-     * 
+     *
      * @param str string to remove from Trie.
      */
     void remove(const string &str);
 
     /**
-     * @brief Searches for prefix-based partial matches using a key, stores
-     *        matches in a vector of strings, then returns the vector.
-     * 
-     * @param key substring used to search for prefix_based partial matches.
-     * @return vector<string>, all prefix_based partial matches.
+     * public: search
+     * @brief Tests if a string is present in the Trie.
+     *
+     * @param str string to search for.
+     * @return true if exists, false otherwise.
      */
-    vector<string> find_all(string key);
-
-    void find_all(string key, vector<string> &results);
-
-    void insert(string str);
-
-    void insert(initializer_list<string> S);
-
     bool search(string str);
+
+    /**
+     * public: size
+     * @brief Returns the size of the Trie.
+     *
+     * @return size_t, size of Trie.
+     */
+    size_t size() const;
 };
 
+/**
+ * public: Node
+ * @brief Construct a new empty Node object.
+ *
+ */
 Trie::Node::Node() {}
 
+/**
+ * public: ~Node
+ * @brief Destroy the Node object. Recursively deallocates every child
+ *        Node, and their child Nodes, and so on.
+ *
+ */
 Trie::Node::~Node()
 {
     // Recursively deletes the Node*'s in this object's Node::node_map.
@@ -176,6 +214,12 @@ Trie::Node::~Node()
         delete it.second;
 }
 
+/**
+ * public: has_child
+ * @brief Tests if the Node has children.
+ *
+ * @return true if has children, false otherwise.
+ */
 bool Trie::Node::has_child()
 {
     // Iterate through this object's Node::node_map.
@@ -185,15 +229,26 @@ bool Trie::Node::has_child()
     return false;
 }
 
+/**
+ * public: Trie
+ * @brief Construct a new empty Trie object.
+ *
+ */
 inline Trie::Trie() {}
 
+/**
+ * public: Trie
+ * @brief Construct a new Trie object by copying from another instance.
+ *
+ * @param other Trie to copy from.
+ */
 inline Trie::Trie(const Trie &other)
 {
-    if(other.empty())
+    if (other.empty())
     {
         return;
     }
-    Node* curr = other.root->node_map.begin()->second;
+    Node *curr = other.root->node_map.begin()->second;
     for (const pair<char, Node *> it : other.root->node_map)
     {
         string key(1, it.first);
@@ -201,6 +256,12 @@ inline Trie::Trie(const Trie &other)
     }
 }
 
+/**
+ * public: Trie
+ * @brief Construct a new Trie object using an intializer list of strings.
+ *
+ * @param S intializer list of strings to insert into Trie.
+ */
 inline Trie::Trie(initializer_list<string> S)
 {
     // Inserts every string to Trie
@@ -210,14 +271,85 @@ inline Trie::Trie(initializer_list<string> S)
     }
 }
 
-inline Trie::~Trie() { delete root; }
+/**
+ * public: ~Trie
+ * @brief Destroy the Trie object. Recursively deallocates every Node in
+ *        the Trie.
+ *
+ */
+inline Trie::~Trie()
+{
+    delete root;
+    root = nullptr;
+    trie_size = 0;
+}
 
-inline void Trie::clear() { delete root; }
+/**
+ * private: copy_by_char
+ * @brief Recursive method for copying strings from another instance of a
+ *        Trie, starting at the root, then travels through the Trie, copying any
+ *        string to "this" instance of a Trie.
+ *
+ * @param curr
+ * @param key
+ */
+void Trie::copy_by_char(Node *&curr, const string &key)
+{
+    // If true, they the key is a valid string.
+    if (curr->isLeaf)
+        this->insert(key);
 
-inline bool Trie::empty()const { return root == nullptr; }
+    // Iterate through current curr->node_map to recursively find all words starting with the specified char
+    for (pair<const char, Node *> &it : curr->node_map)
+    {
+        if (it.second) // If second item is not nullptr, find all matches with first item appended to key.
+        {
+            copy_by_char(it.second, key + it.first);
+        }
+    }
+}
 
-inline size_t Trie::size() const { return trie_size; }
+/**
+ * private: find_all
+ * @brief Recursive private method for searching for prefix-based matches
+ *        using a key, then storing any matches.
+ *
+ * @param curr current position in the Trie.
+ * @param key substring use for finding prefix-based matches in the Trie.
+ * @param results vector containing all prefix_based matches.
+ */
+void Trie::find_all(Node *&curr, const string &key, vector<string> &results)
+{
+    // If true, they the key is a valid string.
+    if (curr->isLeaf)
+        results.push_back(key);
 
+    // Iterate through current curr->node_map to recursively find prefix-based partial matches.
+    for (pair<const char, Node *> &it : curr->node_map)
+    {
+        if (it.second) // If second item is not nullptr, find all matches with first item appended to key.
+        {
+            find_all(it.second, key + it.first, results);
+        }
+    }
+}
+
+/**
+ * private: get_root
+ * @brief Returns a pointer to the root of the Trie.
+ *
+ * @return Node*, pointer to root.
+ */
+inline Trie::Node *Trie::get_root() const { return root; }
+
+/**
+ * private: remove
+ * @brief Recursive private method that removes a string from the Trie.
+ *
+ * @param curr current position in the Trie.
+ * @param str string to remove from Trie.
+ * @return true when a Node is to be deleted, false otherwise.
+ */
 bool Trie::remove(Node *&curr, const string &str)
 {
 
@@ -278,50 +410,34 @@ bool Trie::remove(Node *&curr, const string &str)
     return false;
 }
 
-void Trie::find_all(Node *&curr, const string &key, vector<string> &results)
+/**
+ * public: clear
+ * @brief Clears the Trie object.
+ *
+ */
+inline void Trie::clear()
 {
-    // If true, they the key is a valid string.
-    if (curr->isLeaf)
-        results.push_back(key);
-
-    // Iterate through current curr->node_map to recursively find prefix-based partial matches.
-    for (pair<const char, Node *> &it : curr->node_map)
-    {
-        if (it.second) // If second item is not nullptr, find all matches with first item appended to key.
-        {
-            find_all(it.second, key + it.first, results);
-        }
-    }
+    delete root;
+    root = nullptr;
+    trie_size = 0;
 }
 
-void Trie::copy_by_char(Node *&curr, const string &key)
-{
-    // If true, they the key is a valid string.
-    if (curr->isLeaf)
-        this->insert(key);
+/**
+ * public: empty
+ * @brief Tests if the Trie is empty, tests with root, not size of Trie.
+ *
+ * @return true if empty, false otherwise.
+ */
+inline bool Trie::empty() const { return root == nullptr; }
 
-    // Iterate through current curr->node_map to recursively find all words starting with the specified char
-    for (pair<const char, Node *> &it : curr->node_map)
-    {
-        if (it.second) // If second item is not nullptr, find all matches with first item appended to key.
-        {
-            copy_by_char(it.second, key + it.first);
-        }
-    }
-}
-
-Trie::Node* Trie::get_root()const
-{
-    Node* curr = root;
-    return curr;
-}
-
-inline void Trie::remove(const string &str)
-{
-    // Calls recursive private remove method.
-    remove(root, str);
-}
-
+/**
+ * public: find_all
+ * @brief Searches for prefix-based partial matches using a key, stores
+ *        matches in a vector of strings, then returns the vector.
+ *
+ * @param key substring used to search for prefix-based partial matches.
+ * @return vector<string>, all prefix-based partial matches.
+ */
 vector<string> Trie::find_all(string key)
 {
     Node *curr = root;
@@ -350,6 +466,14 @@ vector<string> Trie::find_all(string key)
     return results;
 }
 
+/**
+ * public: find_all
+ * @brief Searches for prefix-based partial matches using a key, stores
+ *        matches in a vector of strings, then returns the vector.
+ *
+ * @param key substring used to search for prefix-based partial matches.
+ * @param results vector of all prefix-based partial matches.
+ */
 void Trie::find_all(string key, vector<string> &results)
 {
     Node *curr = root;
@@ -376,6 +500,12 @@ void Trie::find_all(string key, vector<string> &results)
         find_all(curr, key, results);
 }
 
+/**
+ * public: insert
+ * @brief Inserts a string into the Trie.
+ *
+ * @param str string to insert into the Trie.
+ */
 inline void Trie::insert(string str)
 {
     if (this->empty()) // If Trie is empty, create a new Node
@@ -399,6 +529,12 @@ inline void Trie::insert(string str)
     curr->isLeaf = true; // Mark as valid string
 }
 
+/**
+ * @brief Inserts a list of strings from an initializer list of strings
+ *        into the Trie.
+ *
+ * @param S intializer list of strings.
+ */
 inline void Trie::insert(initializer_list<string> S)
 {
     // Inserts every string in list to the Trie
@@ -408,7 +544,26 @@ inline void Trie::insert(initializer_list<string> S)
     }
 }
 
-bool Trie::search(string str)
+/**
+ * public: remove
+ * @brief Removes a string from a Trie.
+ *
+ * @param str string to remove from Trie.
+ */
+inline void Trie::remove(const string &str)
+{
+    // Calls recursive private remove method.
+    remove(root, str);
+}
+
+/**
+ * public: search
+ * @brief Tests if a string is present in the Trie.
+ *
+ * @param str string to search for.
+ * @return true if exists, false otherwise.
+ */
+inline bool Trie::search(string str)
 {
     if (this->empty()) // If Trie is empty, string doesn't exist
         return false;
@@ -428,3 +583,11 @@ bool Trie::search(string str)
     // end of the string is reached
     return curr->isLeaf;
 }
+
+/**
+ * public: size
+ * @brief Returns the size of the Trie.
+ *
+ * @return size_t, size of Trie.
+ */
+inline size_t Trie::size() const { return trie_size; }

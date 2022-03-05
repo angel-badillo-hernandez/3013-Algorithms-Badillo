@@ -11,8 +11,6 @@ void load_trie(Trie &tree, string file_name);
 // C++ implementation of Trie data structure
 int main()
 {
-    Trie A = {"l"};
-    Trie B(A);
     
 }
 
