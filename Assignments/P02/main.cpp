@@ -71,8 +71,8 @@ int main()
 {
     char k;           // holder for character being typed
     string word = ""; // var to concatenate letters to
-    List animals;     // array of animal names
-    List matches;     // any matches found in vector of animals
+    List dictionary;  // List to hold words
+    List matches;     // any matches found in List of dictionary
     int loc;          // location of substring to change its color
     int numMatches;   // loop control variable for printing matches
 
@@ -84,11 +84,11 @@ int main()
     Timer T;   // create a timer
     T.Start(); // start it
 
-    load_list(animals, "dictionary.txt");
+    load_list(dictionary, "dictionary.txt");
 
     T.End(); // end the current timer
 
-    // print out how long it took to load the animals file
+    // print out how long it took to load the dictionary file
     cout << YELLOW << T.Seconds() << termcolor::reset << " seconds to read in data from dictionary.txt\n";
     cout << BLUE << T.MilliSeconds() << termcolor::reset << " milliseconds to read in data from dictionary.txt\n";
 
@@ -130,7 +130,7 @@ int main()
 
         // Find any strings in the array that partially match
         // our substr word
-        get_matches(animals, matches, word);
+        get_matches(dictionary, matches, word);
 
         T.End(); // End timer for finding matches
 
