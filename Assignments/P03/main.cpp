@@ -1,10 +1,43 @@
+/**************************************************************************************
+*
+*  Author:           Angel Badillo Hernandez  / @It-Is-Legend27
+*  Email:            badilloa022402@gmail.com / abadillo0224@my.msutexas.edu
+*  Label:            P03
+*  Title:            Processing in Trie Tree Time
+*  Course:           CMPS-3013-201
+*  Semester:         Spring 2022
+*
+*  Description:
+*        Simulation of performing operations on a Trie Tree.
+         Times how long it takes to load the file data to the Trie.
+         Times how long it takes get partial matches from a Trie.
+         Gets chars by "getching" and creates substrings to use for finding
+         partial matches. Minor note, Milliseconds() works because I edited Prof. Griffin's
+         "timer.hpp" file. Another note, I used this source for getting the basis of
+         an unordered_map based Trie, but most of the code in Trie.hpp is largely my own.
+         https://www.techiedelight.com/memory-efficient-trie-implementation-using-map-insert-search-delete/
+*
+*  Usage:
+*        g++ main.cpp -o main
+         ./main
+*
+*  Files:            main.cpp
+                     Trie.hpp
+                     timer.hpp
+                     mygetch.hpp
+                     termcolor.hpp
+                     dictionary.txt
+***************************************************************************************/
+#include <iostream>
+#include <algorithm>
+#include <fstream>
+#include <string>
+#include <unordered_map>
+#include <vector>
+#include "Trie.hpp"
 #include "mygetch.hpp"
 #include "termcolor.hpp"
 #include "timer.hpp"
-#include <algorithm>
-#include <fstream>
-#include <iostream>
-#include "Trie.hpp"
 
 #define RED termcolor::red
 #define BLUE termcolor::blue
@@ -15,26 +48,35 @@
 
 using namespace std;
 
+/**
+ * load_trie
+ * @brief Opens an input file and reads in the data to the Trie.
+ *        Makes every string fully lower case while inserting to Trie.
+ * 
+ * @param tree Trie to store data in.
+ * @param file_name input file name.
+ */
 void load_trie(Trie &tree, string file_name);
 
 int main()
 {
-    char k;           // holder for character being typed
-    string word = ""; // var to concatenate letters to
-    Trie dictionary;  // array of animal names
-    List matches;     // any matches found in vector of animals
-    int loc;          // location of substring to change its color
-    int numMatches;   // loop control variable for printing matches
+    char k;                 // holder for character being typed
+    string word = "";       // var to concatenate letters to
+    Trie dictionary;        // Trie of words
+    vector<string> matches; // any matches found in vector of animals
+    int loc;                // location of substring to change its color
+    int numMatches;         // loop control variable for printing matches
 
     // Program Header
     cout << GREEN << string(90, '#')
-         << "\nProgram 2 - Processing in Linear Time\nCMPS 3013\nAngel Badillo Hernandez\n"
-         << string(90, '#') << '\n' << termcolor::reset;
+         << "\nProgram 2 - Processing in Trie Tree Time\nCMPS 3013\nAngel Badillo Hernandez\n"
+         << string(90, '#') << '\n'
+         << termcolor::reset;
 
     Timer T;   // create a timer
     T.Start(); // start it
 
-    load_list(animals, "dictionary.txt");
+    load_trie(dictionary, "dictionary.txt");
 
     T.End(); // end the current timer
 
@@ -80,7 +122,7 @@ int main()
 
         // Find any strings in the array that partially match
         // our substr word
-        get_matches(animals, matches, word);
+        dictionary.find_all(word, matches);
 
         T.End(); // End timer for finding matches
 
@@ -91,7 +133,8 @@ int main()
             cout << BLUE << T.MilliSeconds() << termcolor::reset << " milliseconds to get matches\n";
             cout << "Keypressed: " << BLUE << k << " = " << (int)k << termcolor::reset << '\n';
             cout << "Current Substring: " << RED << word << termcolor::reset << '\n';
-            cout << matches.size() << " possible match(es).\n" << GREEN;
+            cout << matches.size() << " possible match(es).\n"
+                 << GREEN;
 
             // If more than 10 matches, only show first 10, else use total amount
             numMatches = matches.size() > 10 ? 10 : matches.size();
@@ -130,6 +173,14 @@ int main()
     return 0;
 }
 
+/**
+ * load_trie
+ * @brief Opens an input file and reads in the data to the Trie.
+ *        Makes every string fully lower case while inserting to Trie.
+ * 
+ * @param tree Trie to store data in.
+ * @param file_name input file name.
+ */
 void load_trie(Trie &tree, string file_name)
 {
     ifstream fin; // file to get animal names
@@ -140,7 +191,7 @@ void load_trie(Trie &tree, string file_name)
     {
         for (char &c : x)
         {
-            c = toupper(c);
+            c = tolower(c);
         }
         tree.insert(x);
     }

@@ -1,10 +1,40 @@
+/**************************************************************************************
+*
+*  Author:           Angel Badillo Hernandez  / @It-Is-Legend27
+*  Email:            badilloa022402@gmail.com / abadillo0224@my.msutexas.edu
+*  Label:            P03
+*  Title:            Processing in Trie Tree Time
+*  Course:           CMPS-3013-201
+*  Semester:         Spring 2022
+*
+*  Description:
+*        Simulation of performing operations on a Trie Tree.
+         Times how long it takes to load the file data to the Trie.
+         Times how long it takes get partial matches from a Trie.
+         Gets chars by "getching" and creates substrings to use for finding
+         partial matches. Minor note, Milliseconds() works because I edited Prof. Griffin's
+         "timer.hpp" file. Another note, I used this source for getting the basis of
+         an unordered_map based Trie, but most of the code in Trie.hpp is largely my own.
+         https://www.techiedelight.com/memory-efficient-trie-implementation-using-map-insert-search-delete/
+*
+*  Usage:
+*        g++ main.cpp -o main
+         ./main
+*
+*  Files:            main.cpp
+                     Trie.hpp
+                     timer.hpp
+                     mygetch.hpp
+                     termcolor.hpp
+                     dictionary.txt
+***************************************************************************************/
 #pragma once
 #include <iostream>
 #include <unordered_map>
 #include <vector>
 #include <string>
 #include <initializer_list>
-// https://www.techiedelight.com/memory-efficient-trie-implementation-using-map-insert-search-delete/
+
 using namespace std;
 
 class Trie
