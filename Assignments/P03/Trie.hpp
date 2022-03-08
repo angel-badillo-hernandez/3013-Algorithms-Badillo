@@ -37,9 +37,62 @@
 
 using namespace std;
 
+/**
+ * Class Trie
+ *
+ * Description: A simple unordered_map based Trie tree, which is able to store
+ *              any possible string.
+ *
+ *
+ * Public_Methods:
+ *          Trie()
+ *          Trie(const Trie&)
+ *          Trie(intializer_list<string>)
+ *      void clear()
+ *      bool empty() const
+ *      vector<string> find_all(string)
+ *      void find_all(string, vector<string>&)
+ *      void insert(string)
+ *      void insert(intializer_list<string>)
+ *      void remove(const string&)
+ *      bool search(string)
+ *      size_t size()const
+ *
+ * Private_Methods:
+ *      void copy_by_char(Node*&, const string&)
+ *      void find_all(Node*, const string&, vector<string>&)
+ *      Node* get_root()const
+ *      bool remove(Node*&, const string&)
+ *
+ * Usage:
+ *      Trie tree; // Create empty tree
+ *      tree.insert("Fortnite"); // Inserts string into Trie
+ *      tree.search("Fortnite"); // Returns true
+ *      tree.remove("Fortnite"); // Removes string from Trie
+ */
 class Trie
 {
 private:
+    /**
+     * struct Node
+     *
+     * Description: A simple Node struct for use in unordered_map based Trie.
+     *
+     *
+     * Public_Methods:
+     *          Node()
+     *          ~Node()
+     *     bool has_child()
+     *
+     * Private_Methods:
+     *      - N/A
+     *
+     * Usage:
+     *      No usage allowed outside of Trie Class.
+     *      Node* root = new Node;          // Creates new Node
+     *      root->node_map["c"] = new Node; // Also creates new Node
+     *      delete root; // Deallocates every Node within the node_map of every Node
+     */
     struct Node
     {
 

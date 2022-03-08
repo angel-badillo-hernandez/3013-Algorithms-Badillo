@@ -39,6 +39,7 @@
 #include "termcolor.hpp"
 #include "timer.hpp"
 
+// Shortcuts for changing terminal colors
 #define RED termcolor::red
 #define BLUE termcolor::blue
 #define YELLOW termcolor::yellow
@@ -63,7 +64,7 @@ int main()
     char k;                 // holder for character being typed
     string word = "";       // var to concatenate letters to
     Trie dictionary;        // Trie of words
-    vector<string> matches; // any matches found in vector of animals
+    vector<string> matches; // any matches found in vector of dictionary
     int loc;                // location of substring to change its color
     int numMatches;         // loop control variable for printing matches
 
@@ -191,9 +192,9 @@ void load_trie(Trie &tree, string file_name)
     {
         for (char &c : x)
         {
-            c = tolower(c);
+            c = tolower(c); // Change char to lowercase (if possible)
         }
-        tree.insert(x);
+        tree.insert(x); // Insert formatted string
     }
     fin.close();
 }
